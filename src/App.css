@@ -1,38 +1,107 @@
-.App {
-  text-align: center;
+*{
+    outline: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.filtro{
+    display: none !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.material-symbols-outlined{
+    cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* HEADER */
+header {
+    position: fixed;
+    height: 8vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    background-color: #1d2125;
+    box-shadow: 0vw .1vw .2vw .2vw #3f3f3f;
+    /* border: .1vw solid #000000; */
 }
 
-.App-link {
-  color: #61dafb;
+/* MARCA */
+
+
+.logo {
+    margin-left: 1vw;
+    max-width: 10vw;
+    max-height: 7vh;
+    min-width: 10vw;
+    min-height: 7vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+
+/* CONT LOGOS */
+.cont_logos {
+    width: 20vw;
+    position: absolute;
+    right: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: #fff .1vw solid; */
+
+}
+
+
+
+/* LOGOA */
+.logos_header {
+    font-size: 1.5vw !important;
+    cursor: pointer;
+    border-radius: 50%;
+    color: #fff;
+
+}
+
+
+/* GRILLAS */
+.opciones_de_grilla {
+    position: fixed;
+    width: 5.5vw;
+    height: 5.5vw;
+    border: .1vw solid #555555;
+    display: flex;
+    align-items: end;
+    justify-content: space-evenly;
+    background-color: #000000;
+    color: #cdcdcd;
+    border-radius: 1vw;
+}
+
+.titulo_novedad_opciones {
+    position: absolute;
+    top: 0vw;
+    font-size: 1vw;
+    margin: .2vw;
+}
+
+.logo_opciones_de_grilla {
+    font-size: 1.2vw !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 1.3vw;
+    height: 1.3vw;
+    border: .1vw solid #666666;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: .2s;
+    background-color: #6c2f00;
+    margin-bottom: .3vw;
+}
+
+.logo_opciones_de_grilla:hover {
+    background-color: #575757;
+    color: #fff;
 }

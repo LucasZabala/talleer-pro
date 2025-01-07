@@ -1,23 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import './App.css';
+import Grid from './Grillas/Grillas.js';
+import Btns from './Componentes/Btns.js';
+
+function App() {      
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className='App'>
+      <header>
+
+        <img src={require('./Imagen/Logo Ap.png')} alt='APUNAO' className='logo' />
+
+        <div className='cont_logos'>
+
+          {/* Grillas */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Grilla'
+            logo='grid_on'
+          />
+
+          {/* <!-- reporte --> */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Reportes'
+            logo='list_alt'
+          />
+
+          {/* <!-- mensaje --> */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Mensajes'
+            logo='mail'
+          />
+
+          {/* <!-- alerta --> */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Alertas'
+            logo='priority_high'
+          />
+
+          {/* <!-- crear usuario --> */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Usuario'
+            logo='account_circle'
+          />
+
+          {/* <!-- salir de pagina --> */}
+          <Btns
+            clase='material-symbols-outlined logos_header'
+            titulo='Salir'
+            logo='logout'
+          />
+
+        </div>
+
       </header>
+
+      <main>
+
+        <Grid/>
+
+      </main>
+
     </div>
   );
 }
