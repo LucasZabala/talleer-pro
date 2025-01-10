@@ -636,14 +636,14 @@ th{
 td {
     border: .01vw solid #404040;
     padding: 8px;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
 
 }
 
 tr {
     color: #3a3a3a;
-
+    
 }
 
 tr:nth-child(odd) {
@@ -654,3 +654,4 @@ tr:nth-child(even) {
     background-color: #eeeeee;
 
 }
+

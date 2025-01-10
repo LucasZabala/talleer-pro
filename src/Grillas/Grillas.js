@@ -1,10 +1,11 @@
 import './Grillas.css';
-import Btns from '../Componentes/Btns';
-import Vacio from '../Componentes/Vacio';
-import ContCentralArriba from '../Componentes/ContCentralArriba';
-import MiniGrids from '../Componentes/MiniGrids';
-import ResumenNovedades from '../Componentes/ResumenNovedades'
-import datosJason from '../tablas.json';
+import Btns from './Componentes/Btns';
+import Vacio from './Componentes/Vacio';
+import ContCentralArriba from './Componentes/ContCentralArriba';
+import MiniGrids from './Componentes/MiniGrids';
+import ResumenNovedades from './Componentes/ResumenNovedades'
+import CuadroAQAF from './Componentes/CuadroAQAF.js';
+import Tabls from './Componentes/Tabls.js';
 
 import React, { useState, useEffect } from 'react';
 
@@ -40,13 +41,16 @@ function Grid() {
 
     // NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR
     const [contAQAF, setContAQAF] = useState(false);
-    const [movimientoX_AQAF, setMovimientoX_AQAF] = useState("0px");
-    const [movimientoY_AQAF, setMovimientoY_AQAF] = useState("0px");
+    const [movimientoX_AQAF, setMovimientoX_AQAF] = useState(0);
+    const [movimientoY_AQAF, setMovimientoY_AQAF] = useState(0);
 
-    //TABLAS
-    const [tablaPendiente, setTablaPendiente] = useState([]);
-    const [tablaEnCurso, setTablaEnCurso] = useState([]);
-    const [tablaFinalizado, setTablaFinalizado] = useState([]);
+    // Seleccionar Fila
+    const [idTablaSelect, setIdTablaSelect] = useState();
+
+    useEffect(()=>{
+        alert(idTablaSelect);
+    },[idTablaSelect])
+
 
     // funcion para cambiar las novedades
     function SeleccinarBtnNovedad(novedad) {
@@ -114,6 +118,8 @@ function Grid() {
         } else if (novedad != 'internos') {
             alert('Elija un Interno');
         }
+
+        setBtnIzquierdo(true);
     }
 
     // funcion abrir y cerrar contenedor irquierdo
@@ -125,30 +131,6 @@ function Grid() {
     function MostrarNumero(num) {
         setNumeroInternoSelect(num);
         setContCentralAbajoDerechaGrilla(true);
-
-        //TABLA
-        setTablaPendiente([]);
-        setTablaEnCurso([]);
-        setTablaFinalizado([]);
-        datosJason.forEach(datos => {
-            if (numeroInternoSelect == datos.Interno) {
-                switch (datos.Estado) {
-                    case 'Pendiente':
-                        setTablaPendiente(tablaPendiente.concat(datos));
-                        break;
-                    case 'En Curso':
-                        setTablaEnCurso(tablaEnCurso.concat(datos));
-                        break;
-                    case 'Finalizado':
-                        setTablaFinalizado(tablaFinalizado.concat(datos));
-                        break;
-                    default:
-                }
-            }
-        });
-
-        console.log("----------------------------------------------------");
-        console.log(tablaPendiente);
 
     }
 
@@ -188,8 +170,8 @@ function Grid() {
 
     function MoverContAQAF(e) {
         if (e.button == 0) {
-            setMovimientoX_AQAF(`${e.pageX}px`);
-            setMovimientoY_AQAF(`${e.pageY}px`);
+            setMovimientoX_AQAF(e.pageX);
+            setMovimientoY_AQAF(e.pageY);
         }
 
     }
@@ -389,38 +371,9 @@ function Grid() {
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Fecha Novedad</th>
-                                            <th>Interno</th>
-                                            <th>Sector</th>
-                                            <th>Novedad Motivo</th>
-                                            <th>Fecha Hora Inicio</th>
-                                            <th>Legajo</th>
-                                            <th>Detalle de Trabajos Realizados</th>
-                                            <th>Fecha y Hora de Finalizacion</th>
-                                            <th>Estado</th>
-                                            <th>Pendiente Por</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2022-01-01</td>
-                                            <td>1</td>
-                                            <td>Mecanica</td>
-                                            <td>Novedad 1</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Legajo 1</td>
-                                            <td>Legajo 2</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Pendiente</td>
-                                            <td>Por confirmar</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <Tabls
+                                    setIdTablaSelect={setIdTablaSelect}
+                                />
                             </div>
 
                         </div>
@@ -560,8 +513,8 @@ function Grid() {
 
                 </div>
 
-                {/* NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR */}
-                <div style={{ top: movimientoY_AQAF, left: movimientoX_AQAF }} className={`${contAQAF ? 'opciones_de_grilla' : 'filtro'}`}>{/*filtro*/}
+                {/* BOTONES NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR */}
+                <div style={{ top: `${movimientoY_AQAF}px`, left: `${movimientoX_AQAF}px` }} className={`${contAQAF ? 'opciones_de_grilla' : 'filtro'}`}>{/*filtro*/}
                     <p className="titulo_novedad_opciones">Novedad</p>
                     <div className="cont_btn_novead">
                         <span className="material-symbols-outlined logo_opciones_de_grilla " title="Agregar">add</span>
@@ -572,6 +525,15 @@ function Grid() {
                         <span className="logo_opciones_de_grilla" title="Finalizar">F</span>
                     </div>
                 </div>
+
+                {/* <!-- contenedor opciones quitar y asignar --> */}
+                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className="cont_btn_A_Q_Agregar filtro"> {/* FILTRO */}
+                    <span title="Asignar" className="btn_A_Q_Agregar">A</span>
+                    <span title="Quitar" className="btn_A_Q_Agregar">Q</span>
+                </div>
+
+                {/* CONTENEDOR DE NOVEDADES DE A Q A F */}
+                <CuadroAQAF />
 
             </div>
         </>

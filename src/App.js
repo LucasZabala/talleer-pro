@@ -1,7 +1,7 @@
 
 import './App.css';
 import Grid from './Grillas/Grillas.js';
-import Btns from './Componentes/Btns.js';
+import Btns from './Grillas/Componentes/Btns.js';
 
 function App() {      
 
