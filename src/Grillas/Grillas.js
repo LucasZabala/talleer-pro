@@ -48,7 +48,7 @@ function Grid() {
     const [idTablaSelect, setIdTablaSelect] = useState();
 
     useEffect(()=>{
-        alert(idTablaSelect);
+        // alert(idTablaSelect);
     },[idTablaSelect])
 
 
@@ -137,10 +137,10 @@ function Grid() {
     // funcion filtrar internos y problemas y conservarlos
     function FiltrarInternos(e) {
         EsconderrContAQAF();
-        setFiltrarInternosProblemas(e.target.value.replace(/\s+/g, '')); //valor del input
+        setFiltrarInternosProblemas(e.target.value); //valor del input .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
             case 'pendientes':
-                setFiltrarInternosPendientes(e.target.value);
+                setFiltrarInternosPendientes(e.target.value.toString().toLowerCase());
                 break;
             case 'encurso':
                 setFiltrarInternosEnCurso(e.target.value);
@@ -373,6 +373,7 @@ function Grid() {
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
                                     setIdTablaSelect={setIdTablaSelect}
+                                    filtrarInternosPendientes = {filtrarInternosPendientes}
                                 />
                             </div>
 

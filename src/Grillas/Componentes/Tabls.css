@@ -1,0 +1,18 @@
+
+::-webkit-scrollbar {
+    width: 0vw;
+    height: .5vw;
+    background-color: #1d2a40;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #474747;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.selected-row {
+    background-color: #25252562; /* Puedes ajustar el color a tu gusto */
+}

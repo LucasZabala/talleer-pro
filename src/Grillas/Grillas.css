@@ -647,7 +647,7 @@ tr {
 }
 
 tr:nth-child(odd) {
-    background-color: #ffffff;
+    background-color: #e0e0e0;
 }
 
 tr:nth-child(even) {
