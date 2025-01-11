@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export default function ContCentralArriba({ novedad, numeroInternoSelect, filtrarInternos, filtrarInternosProblemas }) {
+export default function ContCentralArriba({ novedad, numeroInternoSelect, filtrarInternos, filtrarInternosProblemas, filtrarFilasTablaSector }) {
 
     const input_interno_problemas = useRef(null);
 
@@ -26,20 +26,20 @@ export default function ContCentralArriba({ novedad, numeroInternoSelect, filtra
             </div>
 
             {/* <!-- contnedor problemas --> */}
-            <div className={`btns-filtrar-problemas ${novedad == 'grilla' ? 'filtro' : ''}`}>
+            <div className={`btns-filtrar-problemas ${novedad === 'internos' ? 'filtro' : ''}`}>
 
                 {/* <!-- TODAS --> */}
-                <button className="problemas problema_SELECCIONADO">Todas</button>
+                <button onClick={() => filtrarFilasTablaSector('Todas')} className="problemas problema_SELECCIONADO">Todas</button>
                 {/* <!-- mecanica --> */}
-                <button className="problemas">Mecanica</button>
+                <button onClick={() => filtrarFilasTablaSector('Mecanica')} className="problemas">Mecanica</button>
                 {/* <!-- electrica --> */}
-                <button className="problemas">Electricidad</button>
+                <button onClick={() => filtrarFilasTablaSector('Electricidad')} className="problemas">Electricidad</button>
                 {/* <!-- carroceria --> */}
-                <button className="problemas">Carroceria</button>
+                <button onClick={() => filtrarFilasTablaSector('Carroceria')} className="problemas">Carroceria</button>
                 {/* <!-- gomerias --> */}
-                <button className="problemas">Gomeria</button>
+                <button onClick={() => filtrarFilasTablaSector('Gomeria')} className="problemas">Gomeria</button>
                 {/* <!-- otras --> */}
-                <button className="problemas">Otras</button>
+                <button onClick={() => filtrarFilasTablaSector('Otras')} className="problemas">Otras</button>
 
 
             </div>

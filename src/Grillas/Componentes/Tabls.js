@@ -75,7 +75,7 @@ function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraI
 
 const rows = tablaInternos.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR));
 
-export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendientes }) {
+export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendientes, filtrarFilaTablaSectorPendientes }) {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -106,6 +106,28 @@ export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendi
     setFilteredRows(filteredData);
     setPage(0); // Al filtrar, siempre vamos a la primera página
   }, [rows, filtrarInternosPendientes]);
+
+  useEffect(() => {
+    // Función auxiliar para filtrar los datos según el criterio
+    const filterData = (rows, filterValue) => {
+      if (filterValue === 'todas') {
+        return rows; // Retorna todos los datos si se selecciona "todas"
+      } else if (filterValue === 'otras') {
+        return rows.filter(row => {
+          return !['mecanica', 'electricidad', 'gomeria', 'carroceria'].includes(row.sector.toLowerCase());
+        });
+      } else {
+        // Filtrado normal basado en el valor ingresado
+        return rows.filter(row => {
+          return row.sector.toString().toLowerCase().includes(filterValue.toString().toLowerCase());
+        });
+      }
+    };
+  
+    const filteredData = filterData(rows, filtrarFilaTablaSectorPendientes);
+    setFilteredRows(filteredData);
+    setPage(0);
+  }, [rows, filtrarFilaTablaSectorPendientes]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -179,188 +201,6 @@ export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendi
     </Paper>
   );
 }
-
-/*
-<TablePagination
-  rowsPerPageOptions={[5, 10, 25]}
-  component="div"
-  count={rows.length}
-  rowsPerPage={rowsPerPage}
-  page={page}
-  onPageChange={handleChangePage}
-  onRowsPerPageChange={handleChangeRowsPerPage}
-  // Personaliza los estilos utilizando sx
-  sx={{
-    '.MuiTablePagination-toolbar': {
-      minHeight: '40px', // Ajusta según tus necesidades
-    },
-    '.MuiTablePagination-input': {
-      fontSize: '1rem',
-    },
-  }}
-/>
-*/
-
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TableRow from '@mui/material/TableRow';
-// import Paper from '@mui/material/Paper';
-// import { TableVirtuoso } from 'react-virtuoso';
-
-
-// // import { Alert } from '@mui/material';
-
-
-
-
-// function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechayHoradeInicio, legajo, detalledeTrabajosRealizados, fechayHoradeFinalizacion, estado, pendientePor) {
-//   return {
-//     id,
-//     fechaNovedad,
-//     interno,
-//     sector,
-//     novedadMotivo,
-//     fechayHoradeInicio,
-//     legajo,
-//     detalledeTrabajosRealizados,
-//     fechayHoradeFinalizacion,
-//     estado,
-//     pendientePor,
-//   };
-// }
-
-// const columns = [
-//   {
-//     // width: 30,
-//     label: 'Id',
-//     dataKey: 'id',
-//   },
-//   {
-//     label: 'Fecha Novedad',
-//     dataKey: 'fechaNovedad',
-//   },
-//   {
-//     // width: 50,
-//     label: 'Interno',
-//     dataKey: 'interno',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Sector',
-//     dataKey: 'sector',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Novedad Motivo',
-//     dataKey: 'novedadMotivo',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Fecha y Hora de Inicio',
-//     dataKey: 'fechayHoradeInicio',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Legajo',
-//     dataKey: 'legajo',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Detalle de Trabajos Realizados',
-//     dataKey: 'detalledeTrabajosRealizados',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Fecha y Hora de Finalizacion',
-//     dataKey: 'fechayHoradeFinalizacion',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Estado',
-//     dataKey: 'estado',
-//   },
-//   {
-//     // width: 10,
-//     label: 'Pendiente Por',
-//     dataKey: 'pendientePor',
-//   },
-// ];
-
-// // const rows = Array.from({ length: 10 }, (_, index) => createData(index));
-// const rows = tablaInternos.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR));
-
-// const VirtuosoTableComponents = {
-//   Scroller: React.forwardRef((props, ref) => (
-//     <TableContainer component={Paper} {...props} ref={ref} />
-//   )),
-//   Table: (props) => (
-//     <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'flex' }} />
-//   ),
-//   TableHead: React.forwardRef((props, ref) => <TableHead {...props} ref={ref} />),
-//   TableRow,
-//   TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
-// };
-
-// function fixedHeaderContent() {
-//   return (
-//     <TableRow>
-//       {columns.map((column) => (
-//         <TableCell
-//           //estilos del encabezado
-//           key={column.dataKey}
-//           variant="head"
-//           align={'center'}
-//           style={{ width: column.width, height: '11vh' }}
-//           sx={{ backgroundColor: '#2b2b2b', color: '#e5e5e5', fontSize: '1vw', fontWeight: 600 }}
-//         >
-//           {column.label}
-//         </TableCell>
-//       ))}
-//     </TableRow>
-//   );
-// }
-
-
-// export default function Tabls({ setIdTablaSelect, filtrarInternosPendientes }) {
-//   const [selectedRowId, setSelectedRowId] = useState(null);
-//   const handleRowClick = (id) => {
-//     setIdTablaSelect(id);
-//     setSelectedRowId(id);
-//   }
-
-//   return (
-//     <Paper style={{ height: '81vh', width: '100%' }}>
-//       <TableVirtuoso
-//         data={rows}
-//         components={VirtuosoTableComponents}
-//         fixedHeaderContent={fixedHeaderContent}
-//         itemContent={
-//           function rowContent(_index, row) {
-
-//             return (
-//               <React.Fragment>
-//                 {columns.map((column) => (
-//                   <TableCell
-//                     key={column.dataKey}
-//                     align={'center'}
-//                     onClick={() => handleRowClick(row.id)}
-//                     style={{ backgroundColor: selectedRowId === row.id ? '#c0c0c0' : '#fff', display: filtrarInternosPendientes === '' ? '' : (row.novedadMotivo.toString().toLowerCase().includes(filtrarInternosPendientes) ? '' : (row.detalledeTrabajosRealizados.toString().toLowerCase().includes(filtrarInternosPendientes) ? '' : 'none')) }}
-//                     sx={{ fontSize: '1vw', padding: '.5vw', fontWeight: 100 }}
-//                   >
-//                     {row[column.dataKey]}
-//                   </TableCell>
-//                 ))}
-//               </React.Fragment>
-//             );
-//           }}
-//       />
-//     </Paper>
-//   );
-// }
-
 /*
 aquí te explico el código
 

@@ -12,32 +12,39 @@ import React, { useState, useEffect } from 'react';
 function Grid() {
 
     // variables para cambiar las novedades
-    const [vacio_2, setVacio_2] = useState(''); // guardar en memoria //
-    const [btnPendiente, setbtnPendiente] = useState(''); // guardar en memoria //
-    const [btnEnCurso, setbtnEnCurso] = useState(''); // guardar en memoria //
-    const [btnFinalizadas, setbtnFinalizadas] = useState(''); // guardar en memoria //
-    const [btnHistorial, setbtnHistorial] = useState(''); // guardar en memoria //
-    const [vacio_3, setVacio_3] = useState(''); // guardar en memoria //
+    const [vacio_2, setVacio_2] = useState('');
+    const [btnPendiente, setbtnPendiente] = useState('');
+    const [btnEnCurso, setbtnEnCurso] = useState('');
+    const [btnFinalizadas, setbtnFinalizadas] = useState('');
+    const [btnHistorial, setbtnHistorial] = useState('');
+    const [vacio_3, setVacio_3] = useState('');
 
 
     // variables abrir y cerrar contenedor irquierdo
-    const [btnIzquierdo, setBtnIzquierdo] = useState(true); // guardar en memoria //
+    const [btnIzquierdo, setBtnIzquierdo] = useState(true);
 
 
     //mostrar numero
-    const [numeroInternoSelect, setNumeroInternoSelect] = useState(''); // guardar en memoria //
+    const [numeroInternoSelect, setNumeroInternoSelect] = useState('');
 
     //ABRIR CERRAR contCentralAbajoDerechaGrilla
     const [contCentralAbajoDerechaGrilla, setContCentralAbajoDerechaGrilla] = useState(false);
 
-    // variables filtrar internos y problemas
-    const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos'); // guardar en memoria //
-    const [filtrarInternosProblemas, setFiltrarInternosProblemas] = useState(''); // guardar en memoria //
-    const [filtrarInternosGrilla, setFiltrarInternosGrilla] = useState(''); // guardar en memoria //
-    const [filtrarInternosPendientes, setFiltrarInternosPendientes] = useState(''); // guardar en memoria //
-    const [filtrarInternosEnCurso, setFiltrarInternosEnCurso] = useState(''); // guardar en memoria //
-    const [filtrarInternosFinalizadas, setFiltrarInternosFinalizadas] = useState(''); // guardar en memoria //
-    const [filtrarInternosHistorial, setFiltrarInternosHistorial] = useState(''); // guardar en memoria //
+    // variables filtrar internos y filas de tabla por novedad y trabajos
+    const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos');
+    const [filtrarInternosProblemas, setFiltrarInternosProblemas] = useState('');
+    const [filtrarInternosGrilla, setFiltrarInternosGrilla] = useState('');
+    const [filtrarInternosPendientes, setFiltrarInternosPendientes] = useState('');
+    const [filtrarInternosEnCurso, setFiltrarInternosEnCurso] = useState('');
+    const [filtrarInternosFinalizadas, setFiltrarInternosFinalizadas] = useState('');
+    const [filtrarInternosHistorial, setFiltrarInternosHistorial] = useState('');
+
+    // variables filtrar filas de tablas por sector
+    const [filtrarFilaTablaSector, setFiltrarFilaTablaSector] = useState('');
+    const [filtrarFilaTablaSectorPendientes, setFiltrarFilaTablaSectorPendientes] = useState('');
+    const [filtrarFilaTablaSectorEnCurso, setFiltrarFilaTablaSectorEnCurso] = useState('');
+    const [filtrarFilaTablaSectorFinalizadas, setFiltrarFilaTablaSectorFinalizadas] = useState('');
+    const [filtrarFilaTablaSectorHistorial, setFiltrarFilaTablaSectorHistorial] = useState('');
 
     // NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR
     const [contAQAF, setContAQAF] = useState(false);
@@ -47,9 +54,9 @@ function Grid() {
     // Seleccionar Fila
     const [idTablaSelect, setIdTablaSelect] = useState();
 
-    useEffect(()=>{
+    useEffect(() => {
         // alert(idTablaSelect);
-    },[idTablaSelect])
+    }, [idTablaSelect])
 
 
     // funcion para cambiar las novedades
@@ -134,7 +141,7 @@ function Grid() {
 
     }
 
-    // funcion filtrar internos y problemas y conservarlos
+    // funcion filtrar internos y filas de tabla y conservarlos en el BUSCADOR INPUT
     function FiltrarInternos(e) {
         EsconderrContAQAF();
         setFiltrarInternosProblemas(e.target.value); //valor del input .replace(/\s+/g, '')
@@ -157,6 +164,28 @@ function Grid() {
 
         }
     }
+    // funcion filtrar filas de tabla y conservarlos en BOTONES de SECTOR
+    function FiltrarFilasTablaSector(typoSector) {
+
+        setFiltrarFilaTablaSector(typoSector.toString().toLowerCase()); //valor del btoon de sector .replace(/\s+/g, '')
+        switch (novedadSeleccionada) {
+            case 'pendientes':
+                setFiltrarFilaTablaSectorPendientes(typoSector.toString().toLowerCase());
+                break;
+            case 'encurso':
+                setFiltrarFilaTablaSectorEnCurso(typoSector.toString().toLowerCase());
+                break;
+            case 'finalizadas':
+                setFiltrarFilaTablaSectorFinalizadas(typoSector.toString().toLowerCase());
+                break;
+            case 'historial':
+                setFiltrarFilaTablaSectorHistorial(typoSector.toString().toLowerCase());
+                break;
+
+        }
+
+    }
+
 
     // NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR
 
@@ -288,10 +317,11 @@ function Grid() {
                 <div className={`${btnIzquierdo ? 'cont-central-Grilla' : 'cont-central-Grilla-2'}`}>
                     {/* contenedor central arriba grilla */}
                     <ContCentralArriba
-                        novedad='grilla'
+                        novedad={novedadSeleccionada}
                         numeroInternoSelect={numeroInternoSelect}
                         filtrarInternos={FiltrarInternos} //funcion al apretar input
                         filtrarInternosProblemas={filtrarInternosProblemas} //valor del input en grillas
+                        filtrarFilasTablaSector={FiltrarFilasTablaSector}//funcion para filtrar filas en tabla de acuerdo al sector
                     />
 
                     {/*//////////////// contenedor central abajo grilla ////////////////*/}
@@ -373,7 +403,8 @@ function Grid() {
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosPendientes = {filtrarInternosPendientes}
+                                    filtrarInternosPendientes={filtrarInternosPendientes} //envia lo que contene el buscador
+                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorPendientes} //envia el sector seleccionado
                                 />
                             </div>
 
