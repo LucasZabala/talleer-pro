@@ -40,11 +40,11 @@ function Grid() {
     const [filtrarInternosHistorial, setFiltrarInternosHistorial] = useState('');
 
     // variables filtrar filas de tablas por sector
-    const [filtrarFilaTablaSector, setFiltrarFilaTablaSector] = useState('');
-    const [filtrarFilaTablaSectorPendientes, setFiltrarFilaTablaSectorPendientes] = useState('');
-    const [filtrarFilaTablaSectorEnCurso, setFiltrarFilaTablaSectorEnCurso] = useState('');
-    const [filtrarFilaTablaSectorFinalizadas, setFiltrarFilaTablaSectorFinalizadas] = useState('');
-    const [filtrarFilaTablaSectorHistorial, setFiltrarFilaTablaSectorHistorial] = useState('');
+    const [filtrarFilaTablaSector, setFiltrarFilaTablaSector] = useState('todas');
+    const [filtrarFilaTablaSectorPendientes, setFiltrarFilaTablaSectorPendientes] = useState('todas');
+    const [filtrarFilaTablaSectorEnCurso, setFiltrarFilaTablaSectorEnCurso] = useState('todas');
+    const [filtrarFilaTablaSectorFinalizadas, setFiltrarFilaTablaSectorFinalizadas] = useState('todas');
+    const [filtrarFilaTablaSectorHistorial, setFiltrarFilaTablaSectorHistorial] = useState('todas');
 
     // NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR
     const [contAQAF, setContAQAF] = useState(false);
@@ -75,6 +75,8 @@ function Grid() {
 
                     //Filtrar internos problemas
                     setFiltrarInternosProblemas(filtrarInternosPendientes);
+                    //Filtrar Sector Select
+                    setFiltrarFilaTablaSector(filtrarFilaTablaSectorPendientes);
                     break;
                 case 'encurso':
                     setVacio_2('');
@@ -86,6 +88,8 @@ function Grid() {
 
                     //Filtrar internos problemas
                     setFiltrarInternosProblemas(filtrarInternosEnCurso);
+                    //Filtrar Sector Select
+                    setFiltrarFilaTablaSector(filtrarFilaTablaSectorEnCurso);
                     break;
                 case 'finalizadas':
                     setVacio_2('');
@@ -97,6 +101,8 @@ function Grid() {
 
                     //Filtrar internos problemas
                     setFiltrarInternosProblemas(filtrarInternosFinalizadas);
+                    //Filtrar Sector Select
+                    setFiltrarFilaTablaSector(filtrarFilaTablaSectorFinalizadas);
                     break;
                 case 'historial':
                     setVacio_2('');
@@ -108,6 +114,8 @@ function Grid() {
 
                     //Filtrar internos problemas
                     setFiltrarInternosProblemas(filtrarInternosHistorial);
+                    //Filtrar Sector Select
+                    setFiltrarFilaTablaSector(filtrarFilaTablaSectorHistorial);
                     break;
                 default:
                     setVacio_2('');
@@ -127,6 +135,8 @@ function Grid() {
         }
 
         setBtnIzquierdo(true);
+
+
     }
 
     // funcion abrir y cerrar contenedor irquierdo
@@ -144,25 +154,35 @@ function Grid() {
     // funcion filtrar internos y filas de tabla y conservarlos en el BUSCADOR INPUT
     function FiltrarInternos(e) {
         EsconderrContAQAF();
-        setFiltrarInternosProblemas(e.target.value); //valor del input .replace(/\s+/g, '')
+        setFiltrarInternosProblemas(e.target.value.toString().toLowerCase()); //valor del input .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
             case 'pendientes':
                 setFiltrarInternosPendientes(e.target.value.toString().toLowerCase());
+                setFiltrarFilaTablaSectorPendientes('todas');
+                setFiltrarFilaTablaSector('todas');
                 break;
             case 'encurso':
-                setFiltrarInternosEnCurso(e.target.value);
+                setFiltrarInternosEnCurso(e.target.value.toString().toLowerCase());
+                setFiltrarFilaTablaSectorEnCurso('todas');
+                setFiltrarFilaTablaSector('todas');
                 break;
             case 'finalizadas':
-                setFiltrarInternosFinalizadas(e.target.value);
+                setFiltrarInternosFinalizadas(e.target.value.toString().toLowerCase());
+                setFiltrarFilaTablaSectorFinalizadas('todas');
+                setFiltrarFilaTablaSector('todas');
                 break;
             case 'historial':
-                setFiltrarInternosHistorial(e.target.value);
+                setFiltrarInternosHistorial(e.target.value.toString().toLowerCase());
+                setFiltrarFilaTablaSectorHistorial('todas');
+                setFiltrarFilaTablaSector('todas');
                 break;
             default:
-                setFiltrarInternosGrilla(e.target.value);
+                setFiltrarInternosGrilla(e.target.value.toString().toLowerCase());
+                setFiltrarFilaTablaSector('todas');
                 break;
 
         }
+
     }
     // funcion filtrar filas de tabla y conservarlos en BOTONES de SECTOR
     function FiltrarFilasTablaSector(typoSector) {
@@ -171,17 +191,32 @@ function Grid() {
         switch (novedadSeleccionada) {
             case 'pendientes':
                 setFiltrarFilaTablaSectorPendientes(typoSector.toString().toLowerCase());
+                //buscador de sector
+                setFiltrarInternosPendientes('');
+                //buscador en filas
+                setFiltrarInternosProblemas('');
                 break;
             case 'encurso':
                 setFiltrarFilaTablaSectorEnCurso(typoSector.toString().toLowerCase());
+                //buscador de sector
+                setFiltrarInternosEnCurso('');
+                //buscador en filas
+                setFiltrarInternosProblemas('');
                 break;
             case 'finalizadas':
                 setFiltrarFilaTablaSectorFinalizadas(typoSector.toString().toLowerCase());
+                //buscador de sector
+                setFiltrarInternosFinalizadas('');
+                //buscador en filas
+                setFiltrarInternosProblemas('');
                 break;
             case 'historial':
                 setFiltrarFilaTablaSectorHistorial(typoSector.toString().toLowerCase());
+                //buscador de sector
+                setFiltrarInternosHistorial('');
+                //buscador en filas
+                setFiltrarInternosProblemas('');
                 break;
-
         }
 
     }
@@ -197,6 +232,8 @@ function Grid() {
         setContAQAF(true);
     }
 
+    //movimientos del cuadrito de Agregar, Asignar, Quitar y Finalizar
+    //tambien del mini cuadrito
     function MoverContAQAF(e) {
         if (e.button == 0) {
             setMovimientoX_AQAF(e.pageX);
@@ -322,6 +359,7 @@ function Grid() {
                         filtrarInternos={FiltrarInternos} //funcion al apretar input
                         filtrarInternosProblemas={filtrarInternosProblemas} //valor del input en grillas
                         filtrarFilasTablaSector={FiltrarFilasTablaSector}//funcion para filtrar filas en tabla de acuerdo al sector
+                        sectorSelect={filtrarFilaTablaSector} //envia el sector seleccionado
                     />
 
                     {/*//////////////// contenedor central abajo grilla ////////////////*/}
@@ -417,38 +455,11 @@ function Grid() {
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Fecha Novedad</th>
-                                            <th>Interno</th>
-                                            <th>Sector</th>
-                                            <th>Novedad Motivo</th>
-                                            <th>Fecha Hora Inicio</th>
-                                            <th>Legajo</th>
-                                            <th>Detalle de Trabajos Realizados</th>
-                                            <th>Fecha y Hora de Finalizacion</th>
-                                            <th>Estado</th>
-                                            <th>Pendiente Por</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2022-01-01</td>
-                                            <td>1</td>
-                                            <td>Mecanica</td>
-                                            <td>Novedad 1</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Legajo 1</td>
-                                            <td>Legajo 2</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Pendiente</td>
-                                            <td>Por confirmar</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <Tabls
+                                    setIdTablaSelect={setIdTablaSelect}
+                                    filtrarInternosPendientes={filtrarInternosEnCurso} //envia lo que contene el buscador
+                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
+                                />
                             </div>
 
                         </div>
@@ -460,38 +471,11 @@ function Grid() {
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Fecha Novedad</th>
-                                            <th>Interno</th>
-                                            <th>Sector</th>
-                                            <th>Novedad Motivo</th>
-                                            <th>Fecha Hora Inicio</th>
-                                            <th>Legajo</th>
-                                            <th>Detalle de Trabajos Realizados</th>
-                                            <th>Fecha y Hora de Finalizacion</th>
-                                            <th>Estado</th>
-                                            <th>Pendiente Por</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2022-01-01</td>
-                                            <td>1</td>
-                                            <td>Mecanica</td>
-                                            <td>Novedad 1</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Legajo 1</td>
-                                            <td>Legajo 2</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Pendiente</td>
-                                            <td>Por confirmar</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <Tabls
+                                    setIdTablaSelect={setIdTablaSelect}
+                                    filtrarInternosPendientes={filtrarInternosFinalizadas} //envia lo que contene el buscador
+                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
+                                />
                             </div>
 
                         </div>
@@ -503,39 +487,11 @@ function Grid() {
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Fecha Novedad</th>
-                                            <th>Interno</th>
-                                            <th>Sector</th>
-                                            <th>Novedad Motivo</th>
-                                            <th>Fecha Hora Inicio</th>
-                                            <th>Legajo</th>
-                                            <th>Detalle de Trabajos Realizados</th>
-                                            <th>Fecha y Hora de Finalizacion</th>
-                                            <th>Estado</th>
-                                            <th>Pendiente Por</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2022-01-01</td>
-                                            <td>1</td>
-                                            <td>Mecanica</td>
-                                            <td>Novedad 1</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Legajo 1</td>
-                                            <td>Legajo 2</td>
-                                            <td>2022-01-01 00:00:00</td>
-                                            <td>Pendiente</td>
-                                            <td>Por confirmar</td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
+                                <Tabls
+                                    setIdTablaSelect={setIdTablaSelect}
+                                    filtrarInternosPendientes={filtrarInternosHistorial} //envia lo que contene el buscador
+                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
+                                />
                             </div>
 
                         </div>

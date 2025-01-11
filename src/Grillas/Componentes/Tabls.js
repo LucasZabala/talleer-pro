@@ -179,7 +179,7 @@ export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendi
         </Table>
       </TableContainer>
       <TablePagination
-        style={{ width: '100%', fontSize: '1vw', height: '6.5vh', overflow: 'hidden' }}
+        style={{ width: '100%', fontSize: '1vw', height: '6.5vh', overflow: 'hidden', background: '#474747', color: '#fff', fontWeight: 600 }}
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
         sx={{
           
