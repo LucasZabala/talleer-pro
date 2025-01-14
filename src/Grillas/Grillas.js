@@ -9,6 +9,9 @@ import Tabls from './Componentes/Tabls.js';
 
 import React, { useState, useEffect } from 'react';
 
+//BASE DE DATOS
+import tablaInternos from '../tablas.json';
+
 function Grid() {
 
     // variables para cambiar las novedades
@@ -19,10 +22,8 @@ function Grid() {
     const [btnHistorial, setbtnHistorial] = useState('');
     const [vacio_3, setVacio_3] = useState('');
 
-
     // variables abrir y cerrar contenedor irquierdo
     const [btnIzquierdo, setBtnIzquierdo] = useState(true);
-
 
     //mostrar numero
     const [numeroInternoSelect, setNumeroInternoSelect] = useState('');
@@ -34,14 +35,14 @@ function Grid() {
     const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos');
     const [filtrarInternosProblemas, setFiltrarInternosProblemas] = useState('');
     const [filtrarInternosGrilla, setFiltrarInternosGrilla] = useState('');
-    const [filtrarInternosPendientes, setFiltrarInternosPendientes] = useState('');
+    const [filtrarInternosDelBuscador, setFiltrarInternosDelBuscador] = useState('');
     const [filtrarInternosEnCurso, setFiltrarInternosEnCurso] = useState('');
     const [filtrarInternosFinalizadas, setFiltrarInternosFinalizadas] = useState('');
     const [filtrarInternosHistorial, setFiltrarInternosHistorial] = useState('');
 
     // variables filtrar filas de tablas por sector
     const [filtrarFilaTablaSector, setFiltrarFilaTablaSector] = useState('todas');
-    const [filtrarFilaTablaSectorPendientes, setFiltrarFilaTablaSectorPendientes] = useState('todas');
+    const [filtrarSectorDelBuscador, setFiltrarSectorDelBuscador] = useState('todas');
     const [filtrarFilaTablaSectorEnCurso, setFiltrarFilaTablaSectorEnCurso] = useState('todas');
     const [filtrarFilaTablaSectorFinalizadas, setFiltrarFilaTablaSectorFinalizadas] = useState('todas');
     const [filtrarFilaTablaSectorHistorial, setFiltrarFilaTablaSectorHistorial] = useState('todas');
@@ -51,12 +52,10 @@ function Grid() {
     const [movimientoX_AQAF, setMovimientoX_AQAF] = useState(0);
     const [movimientoY_AQAF, setMovimientoY_AQAF] = useState(0);
 
-    // Seleccionar Fila
+    // Seleccionar Fila de TABLA
     const [idTablaSelect, setIdTablaSelect] = useState();
 
-    useEffect(() => {
-        // alert(idTablaSelect);
-    }, [idTablaSelect])
+
 
 
     // funcion para cambiar las novedades
@@ -74,9 +73,9 @@ function Grid() {
                     setVacio_3('');
 
                     //Filtrar internos problemas
-                    setFiltrarInternosProblemas(filtrarInternosPendientes);
+                    setFiltrarInternosProblemas(filtrarInternosDelBuscador);
                     //Filtrar Sector Select
-                    setFiltrarFilaTablaSector(filtrarFilaTablaSectorPendientes);
+                    setFiltrarFilaTablaSector(filtrarSectorDelBuscador);
                     break;
                 case 'encurso':
                     setVacio_2('');
@@ -157,8 +156,8 @@ function Grid() {
         setFiltrarInternosProblemas(e.target.value.toString().toLowerCase()); //valor del input .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
             case 'pendientes':
-                setFiltrarInternosPendientes(e.target.value.toString().toLowerCase());
-                setFiltrarFilaTablaSectorPendientes('todas');
+                setFiltrarInternosDelBuscador(e.target.value.toString().toLowerCase());
+                setFiltrarSectorDelBuscador('todas');
                 setFiltrarFilaTablaSector('todas');
                 break;
             case 'encurso':
@@ -190,9 +189,9 @@ function Grid() {
         setFiltrarFilaTablaSector(typoSector.toString().toLowerCase()); //valor del btoon de sector .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
             case 'pendientes':
-                setFiltrarFilaTablaSectorPendientes(typoSector.toString().toLowerCase());
+                setFiltrarSectorDelBuscador(typoSector.toString().toLowerCase());
                 //buscador de sector
-                setFiltrarInternosPendientes('');
+                setFiltrarInternosDelBuscador('');
                 //buscador en filas
                 setFiltrarInternosProblemas('');
                 break;
@@ -241,8 +240,6 @@ function Grid() {
         }
 
     }
-
-
 
 
     return (
@@ -360,6 +357,7 @@ function Grid() {
                         filtrarInternosProblemas={filtrarInternosProblemas} //valor del input en grillas
                         filtrarFilasTablaSector={FiltrarFilasTablaSector}//funcion para filtrar filas en tabla de acuerdo al sector
                         sectorSelect={filtrarFilaTablaSector} //envia el sector seleccionado
+
                     />
 
                     {/*//////////////// contenedor central abajo grilla ////////////////*/}
@@ -440,9 +438,11 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    novedadSeleccionada={novedadSeleccionada}
+                                    typoNovedad={'pendientes'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosPendientes={filtrarInternosPendientes} //envia lo que contene el buscador
-                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorPendientes} //envia el sector seleccionado
+                                    filtrarInternosDelBuscador={filtrarInternosDelBuscador} //envia lo que contene el buscador
+                                    filtrarSectorDelBuscador={filtrarSectorDelBuscador} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -456,9 +456,11 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    novedadSeleccionada={novedadSeleccionada}
+                                    typoNovedad={'encurso'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosPendientes={filtrarInternosEnCurso} //envia lo que contene el buscador
-                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
+                                    filtrarInternosDelBuscador={filtrarInternosEnCurso} //envia lo que contene el buscador
+                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -472,9 +474,11 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    novedadSeleccionada={novedadSeleccionada}
+                                    typoNovedad={'finalizadas'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosPendientes={filtrarInternosFinalizadas} //envia lo que contene el buscador
-                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
+                                    filtrarInternosDelBuscador={filtrarInternosFinalizadas} //envia lo que contene el buscador
+                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -488,9 +492,11 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    novedadSeleccionada={novedadSeleccionada}
+                                    typoNovedad={'historial'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosPendientes={filtrarInternosHistorial} //envia lo que contene el buscador
-                                    filtrarFilaTablaSectorPendientes={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
+                                    filtrarInternosDelBuscador={filtrarInternosHistorial} //envia lo que contene el buscador
+                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -529,3 +535,159 @@ function Grid() {
 }
 
 export default Grid;
+
+/*
+const [conteosInternos, setConteosInternos] = useState([
+        {
+            Interno: 1,
+            Pendiente: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            'En Curso': {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            Finalizado: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            Historial: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+        },
+        {
+            Interno: 2,
+            Pendiente: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            'En Curso': {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            Finalizado: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+            Historial: {
+                CARROCERIA: 0,
+                GOMERIA: 0,
+                ELECTRICIDAD: 0,
+                MECANICA: 0,
+                OTRA: 0,
+            },
+        },
+
+    ]);
+
+    const sectoresValidos = ['MECANICA', 'ELECTRICIDAD', 'GOMERIA', 'CARROCERIA'];
+
+    useEffect(() => {
+        try {
+
+            const newConteos = tablaInternos.reduce((acc, tbs) => {
+                const estado = tbs.Estado.toString();
+                const sector = tbs.Sector?.toUpperCase() || 'OTRA';
+
+                // Verificamos si el sector está en la lista de sectores válidos
+                const sectorFinal = sectoresValidos.includes(sector) ? sector : 'OTRA';
+
+                acc[estado] = acc[estado] || {};
+                acc[estado][sectorFinal] = (acc[estado][sectorFinal] || 0) + 1;
+                acc['Historial'][sectorFinal] = (acc['Historial'][sectorFinal] || 0) + 1;
+
+                return acc;
+            }, { ...conteosInternos });
+
+            setConteosInternos(newConteos);
+
+        } catch (error) {
+            console.error('Error al cargar o clasificar los datos:', error);
+            // Puedes mostrar un mensaje de error al usuario aquí
+        }
+    }, [numeroInternoSelect]);
+*/
+
+
+/*
+//INTERNOS CON SUS NOVEDADES
+    const [conteosInternos, setConteosInternos] = useState({
+        Pendiente: {
+            CARROCERIA: 0,
+            GOMERIA: 0,
+            ELECTRICIDAD: 0,
+            MECANICA: 0,
+            OTRA: 0,
+        },
+        'En Curso': {
+            CARROCERIA: 0,
+            GOMERIA: 0,
+            ELECTRICIDAD: 0,
+            MECANICA: 0,
+            OTRA: 0,
+        },
+        Finalizado: {
+            CARROCERIA: 0,
+            GOMERIA: 0,
+            ELECTRICIDAD: 0,
+            MECANICA: 0,
+            OTRA: 0,
+        },
+        Historial: {
+            CARROCERIA: 0,
+            GOMERIA: 0,
+            ELECTRICIDAD: 0,
+            MECANICA: 0,
+            OTRA: 0,
+        },
+    });
+
+    const sectoresValidos = ['MECANICA', 'ELECTRICIDAD', 'GOMERIA', 'CARROCERIA'];
+    useEffect(() => {
+        try {
+            
+            const newConteos = tablaInternos.reduce((acc, tbs) => {
+                const estado = tbs.Estado.toString();
+                const sector = tbs.Sector?.toUpperCase() || 'OTRA';
+
+                // Verificamos si el sector está en la lista de sectores válidos
+                const sectorFinal = sectoresValidos.includes(sector) ? sector : 'OTRA';
+
+                acc[estado] = acc[estado] || {};
+                acc[estado][sectorFinal] = (acc[estado][sectorFinal] || 0) + 1;
+                acc['Historial'][sectorFinal] = (acc['Historial'][sectorFinal] || 0) + 1;
+
+                return acc;
+            }, { ...conteosInternos });
+
+            setConteosInternos(newConteos);
+
+        } catch (error) {
+            console.error('Error al cargar o clasificar los datos:', error);
+            // Puedes mostrar un mensaje de error al usuario aquí
+        }
+    }, [numeroInternoSelect]);
+*/

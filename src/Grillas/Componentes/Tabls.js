@@ -75,7 +75,27 @@ function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraI
 
 const rows = tablaInternos.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR));
 
-export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendientes, filtrarFilaTablaSectorPendientes }) {
+export default function StickyHeadTable({ novedadSeleccionada, typoNovedad, setIdTablaSelect, filtrarInternosDelBuscador, filtrarSectorDelBuscador }) {
+
+  const [filtrarPorNovedad, setFiltrarPorNovedad] = useState();
+
+  useEffect(() => {
+    switch (novedadSeleccionada) {
+
+      case 'pendientes':
+        setFiltrarPorNovedad('pendiente');
+        break;
+      case 'encurso':
+        setFiltrarPorNovedad('en curso');
+        break;
+      case 'finalizadas':
+        setFiltrarPorNovedad('finalizado');
+        break;
+      default:
+        setFiltrarPorNovedad('historial');
+    }
+  }, [novedadSeleccionada]);
+
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -98,15 +118,19 @@ export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendi
   //filtrado
   const [filteredRows, setFilteredRows] = useState(rows);
 
+  // filtrar por Novedad motivo y Detalle de trabajos
   useEffect(() => {
     const filteredData = rows.filter(row => {
-      return row.novedadMotivo.toString().toLowerCase().includes(filtrarInternosPendientes.toLowerCase()) ||
-        row.detalleTrabajosRealizados.toString().toLowerCase().includes(filtrarInternosPendientes.toLowerCase());
+      return (
+        row.novedadMotivo.toLowerCase().includes(filtrarInternosDelBuscador.toLowerCase()) ||
+        row.detalleTrabajosRealizados.toLowerCase().includes(filtrarInternosDelBuscador.toLowerCase())
+      );
     });
     setFilteredRows(filteredData);
     setPage(0); // Al filtrar, siempre vamos a la primera página
-  }, [rows, filtrarInternosPendientes]);
+  }, [rows, filtrarInternosDelBuscador]);
 
+  // filtrar por sector usando criterios
   useEffect(() => {
     // Función auxiliar para filtrar los datos según el criterio
     const filterData = (rows, filterValue) => {
@@ -123,82 +147,87 @@ export default function StickyHeadTable({ setIdTablaSelect, filtrarInternosPendi
         });
       }
     };
-  
-    const filteredData = filterData(rows, filtrarFilaTablaSectorPendientes);
+    const filteredData = filterData(rows, filtrarSectorDelBuscador);
     setFilteredRows(filteredData);
     setPage(0);
-  }, [rows, filtrarFilaTablaSectorPendientes]);
+  }, [rows, filtrarSectorDelBuscador]);
+
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: '74vh', height: 'fit-content' }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth, padding: column.padding, maxHeight: column.maxHeight, height: '5vh' }}
-                  sx={{ background: '#2b2b2b', color: '#fff', padding: ' .2vw 0.5vw', fontSize: '1vw' }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell
-                          onClick={() => handleRowClick(row.id)}
-                          key={column.id}
-                          align={column.align}
-                          className={selectedRowId === row.id ? 'selected-row' : ''}
-                          style={{
-                            height: '5vh',
-                            fontSize: '1vw',
-                            padding: '0.2vw 0.5vw'
-                          }}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        style={{ width: '100%', fontSize: '1vw', height: '6.5vh', overflow: 'hidden', background: '#474747', color: '#fff', fontWeight: 600 }}
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
-        sx={{
-          
-          '.MuiTablePagination-toolbar': {
-            minHeight: '1vw', // Ajusta según tus necesidades
-            fontSize: '1vw'
-          },
-          '.MuiTablePagination-input': {
-            fontSize: '1vw'
-          },
-        }}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+    <>
+      {novedadSeleccionada === typoNovedad && (
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: '74vh', height: 'fit-content' }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth, padding: column.padding, maxHeight: column.maxHeight, height: '5vh' }}
+                      sx={{ background: '#2b2b2b', color: '#fff', padding: ' .2vw 0.5vw', fontSize: '1vw' }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredRows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell
+                              onClick={() => handleRowClick(row.id)}
+                              key={column.id}
+                              align={column.align}
+                              className={selectedRowId === row.id ? 'selected-row' : ''}
+                              style={{
+                                height: '5vh',
+                                fontSize: '1vw',
+                                padding: '0.2vw 0.5vw'
+                              }}>
+                              {column.format && typeof value === 'number'
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            style={{ width: '100%', fontSize: '1vw', height: '6.5vh', overflow: 'hidden', background: '#474747', color: '#fff', fontWeight: 600 }}
+            rowsPerPageOptions={[5, 10, 25, 50, 100]}
+            sx={{
+
+              '.MuiTablePagination-toolbar': {
+                minHeight: '1vw', // Ajusta según tus necesidades
+                fontSize: '1vw'
+              },
+              '.MuiTablePagination-input': {
+                fontSize: '1vw'
+              },
+            }}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      )}
+    </>
+
   );
 }
 /*
