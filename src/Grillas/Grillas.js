@@ -7,12 +7,18 @@ import ResumenNovedades from './Componentes/ResumenNovedades'
 import CuadroAQAF from './Componentes/CuadroAQAF.js';
 import Tabls from './Componentes/Tabls.js';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 //BASE DE DATOS
 import tablaInternos from '../tablas.json';
 
 function Grid() {
+    //separar tabla internos
+    const [tablaPendiente, setTablaPendiente] = useState([]);
+    const [tablaEnCurso, setTablaEnCurso] = useState([]);
+    const [tablaFinalizado, setTablaFinalizado] = useState([]);
+
+    
 
     // variables para cambiar las novedades
     const [vacio_2, setVacio_2] = useState('');
@@ -35,14 +41,14 @@ function Grid() {
     const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos');
     const [filtrarInternosProblemas, setFiltrarInternosProblemas] = useState('');
     const [filtrarInternosGrilla, setFiltrarInternosGrilla] = useState('');
-    const [filtrarInternosDelBuscador, setFiltrarInternosDelBuscador] = useState('');
+    const [filtrarInternosPendiente, setFiltrarInternosPendiente] = useState('');
     const [filtrarInternosEnCurso, setFiltrarInternosEnCurso] = useState('');
     const [filtrarInternosFinalizadas, setFiltrarInternosFinalizadas] = useState('');
     const [filtrarInternosHistorial, setFiltrarInternosHistorial] = useState('');
 
     // variables filtrar filas de tablas por sector
     const [filtrarFilaTablaSector, setFiltrarFilaTablaSector] = useState('todas');
-    const [filtrarSectorDelBuscador, setFiltrarSectorDelBuscador] = useState('todas');
+    const [filtrarSectorPendiente, setFiltrarSectorPendiente] = useState('todas');
     const [filtrarFilaTablaSectorEnCurso, setFiltrarFilaTablaSectorEnCurso] = useState('todas');
     const [filtrarFilaTablaSectorFinalizadas, setFiltrarFilaTablaSectorFinalizadas] = useState('todas');
     const [filtrarFilaTablaSectorHistorial, setFiltrarFilaTablaSectorHistorial] = useState('todas');
@@ -64,7 +70,7 @@ function Grid() {
             setContCentralAbajoDerechaGrilla(true);
             setNovedadSeleccionada(novedad);
             switch (novedad) {
-                case 'pendientes':
+                case 'pendiente':
                     setVacio_2('btns-novedad-ant');
                     setbtnPendiente('btns-novedad-select');
                     setbtnEnCurso('btns-novedad-post');
@@ -73,9 +79,9 @@ function Grid() {
                     setVacio_3('');
 
                     //Filtrar internos problemas
-                    setFiltrarInternosProblemas(filtrarInternosDelBuscador);
+                    setFiltrarInternosProblemas(filtrarInternosPendiente);
                     //Filtrar Sector Select
-                    setFiltrarFilaTablaSector(filtrarSectorDelBuscador);
+                    setFiltrarFilaTablaSector(filtrarSectorPendiente);
                     break;
                 case 'encurso':
                     setVacio_2('');
@@ -90,7 +96,7 @@ function Grid() {
                     //Filtrar Sector Select
                     setFiltrarFilaTablaSector(filtrarFilaTablaSectorEnCurso);
                     break;
-                case 'finalizadas':
+                case 'finalizado':
                     setVacio_2('');
                     setbtnPendiente('');
                     setbtnEnCurso('btns-novedad-ant');
@@ -155,9 +161,9 @@ function Grid() {
         EsconderrContAQAF();
         setFiltrarInternosProblemas(e.target.value.toString().toLowerCase()); //valor del input .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
-            case 'pendientes':
-                setFiltrarInternosDelBuscador(e.target.value.toString().toLowerCase());
-                setFiltrarSectorDelBuscador('todas');
+            case 'pendiente':
+                setFiltrarInternosPendiente(e.target.value.toString().toLowerCase());
+                setFiltrarSectorPendiente('todas');
                 setFiltrarFilaTablaSector('todas');
                 break;
             case 'encurso':
@@ -165,7 +171,7 @@ function Grid() {
                 setFiltrarFilaTablaSectorEnCurso('todas');
                 setFiltrarFilaTablaSector('todas');
                 break;
-            case 'finalizadas':
+            case 'finalizado':
                 setFiltrarInternosFinalizadas(e.target.value.toString().toLowerCase());
                 setFiltrarFilaTablaSectorFinalizadas('todas');
                 setFiltrarFilaTablaSector('todas');
@@ -188,10 +194,10 @@ function Grid() {
 
         setFiltrarFilaTablaSector(typoSector.toString().toLowerCase()); //valor del btoon de sector .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
-            case 'pendientes':
-                setFiltrarSectorDelBuscador(typoSector.toString().toLowerCase());
+            case 'pendiente':
+                setFiltrarSectorPendiente(typoSector.toString().toLowerCase());
                 //buscador de sector
-                setFiltrarInternosDelBuscador('');
+                setFiltrarInternosPendiente('');
                 //buscador en filas
                 setFiltrarInternosProblemas('');
                 break;
@@ -202,7 +208,7 @@ function Grid() {
                 //buscador en filas
                 setFiltrarInternosProblemas('');
                 break;
-            case 'finalizadas':
+            case 'finalizado':
                 setFiltrarFilaTablaSectorFinalizadas(typoSector.toString().toLowerCase());
                 //buscador de sector
                 setFiltrarInternosFinalizadas('');
@@ -269,7 +275,7 @@ function Grid() {
                     {/* boton desplegar */}
                     <span onClick={() => ActivarDesactivarContIzquierdo()}>
                         <Btns
-                            clase="material-symbols-outlined btn-desplegar-cont-izquierdo"
+                            clase='material-symbols-outlined btn-desplegar-cont-izquierdo'
                             logo='arrow_forward_ios'
                             titulo=''
                             identificador='btn-desplegar-cont-izquierdo'
@@ -294,7 +300,7 @@ function Grid() {
                         />
 
                         {/* Boton de Pendientes */}
-                        <div onClick={() => SeleccinarBtnNovedad('pendientes')}>
+                        <div onClick={() => SeleccinarBtnNovedad('pendiente')}>
                             <Btns
                                 clase={`Btns-Pendiente-EnCurso-Finalizada-Hisotiral ${btnPendiente}`}
                                 logo='P'
@@ -316,7 +322,7 @@ function Grid() {
                         </div>
 
                         {/* Boton de Finalizadas */}
-                        <div onClick={() => SeleccinarBtnNovedad('finalizadas')}>
+                        <div onClick={() => SeleccinarBtnNovedad('finalizado')}>
                             <Btns
                                 clase={`Btns-Pendiente-EnCurso-Finalizada-Hisotiral ${btnFinalizadas}`}
                                 logo='F'
@@ -432,17 +438,18 @@ function Grid() {
                     </div>
 
                     {/*//////////////// contenedor central abajo Pendientes /////////////////*/}
-                    <div className={`${novedadSeleccionada == 'pendientes' ? (btnIzquierdo ? 'cont-central-abajo-grilla' : 'cont-central-abajo-grilla-2') : 'filtro'}`}>
+                    <div className={`${novedadSeleccionada == 'pendiente' ? (btnIzquierdo ? 'cont-central-abajo-grilla' : 'cont-central-abajo-grilla-2') : 'filtro'}`}>
 
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    tablaInterno={tablaPendiente}
                                     novedadSeleccionada={novedadSeleccionada}
-                                    typoNovedad={'pendientes'}
+                                    typoNovedad={'pendiente'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosDelBuscador={filtrarInternosDelBuscador} //envia lo que contene el buscador
-                                    filtrarSectorDelBuscador={filtrarSectorDelBuscador} //envia el sector seleccionado
+                                    contenidoInput={filtrarInternosPendiente} //envia lo que contene el buscador
+                                    contenidoSector={filtrarSectorPendiente} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -456,11 +463,12 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    tablaInterno={tablaEnCurso}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'encurso'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosDelBuscador={filtrarInternosEnCurso} //envia lo que contene el buscador
-                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
+                                    contenidoInput={filtrarInternosEnCurso} //envia lo que contene el buscador
+                                    contenidoSector={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -468,17 +476,18 @@ function Grid() {
 
                     </div>
                     {/*//////////////// contenedor central abajo finalizadas /////////////////*/}
-                    <div className={`${novedadSeleccionada == 'finalizadas' ? (btnIzquierdo ? 'cont-central-abajo-grilla' : 'cont-central-abajo-grilla-2') : 'filtro'}`}>
+                    <div className={`${novedadSeleccionada == 'finalizado' ? (btnIzquierdo ? 'cont-central-abajo-grilla' : 'cont-central-abajo-grilla-2') : 'filtro'}`}>
 
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    tablaInterno={tablaFinalizado}
                                     novedadSeleccionada={novedadSeleccionada}
-                                    typoNovedad={'finalizadas'}
+                                    typoNovedad={'finalizado'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosDelBuscador={filtrarInternosFinalizadas} //envia lo que contene el buscador
-                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
+                                    contenidoInput={filtrarInternosFinalizadas} //envia lo que contene el buscador
+                                    contenidoSector={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
                                 />
                             </div>
 
@@ -492,38 +501,36 @@ function Grid() {
                         <div className='cont-central-abajo-izquierda-grilla-P-EC-F-H'>
                             <div className='cont-P-EC-F-H-grilla'>
                                 <Tabls
+                                    tablaInterno={tablaInternos}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'historial'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    filtrarInternosDelBuscador={filtrarInternosHistorial} //envia lo que contene el buscador
-                                    filtrarSectorDelBuscador={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
+                                    contenidoInput={filtrarInternosHistorial} //envia lo que contene el buscador
+                                    contenidoSector={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
                                 />
                             </div>
 
                         </div>
-
                     </div>
-
-
                 </div>
 
                 {/* BOTONES NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR */}
                 <div style={{ top: `${movimientoY_AQAF}px`, left: `${movimientoX_AQAF}px` }} className={`${contAQAF ? 'opciones_de_grilla' : 'filtro'}`}>{/*filtro*/}
-                    <p className="titulo_novedad_opciones">Novedad</p>
-                    <div className="cont_btn_novead">
-                        <span className="material-symbols-outlined logo_opciones_de_grilla " title="Agregar">add</span>
-                        <span className="logo_opciones_de_grilla" title="Asignar">A</span>
+                    <p className='titulo_novedad_opciones'>Novedad</p>
+                    <div className='cont_btn_novead'>
+                        <span className='material-symbols-outlined logo_opciones_de_grilla ' title='Agregar'>add</span>
+                        <span className='logo_opciones_de_grilla' title='Asignar'>A</span>
                     </div>
-                    <div className="cont_btn_novead">
-                        <span className="logo_opciones_de_grilla" title="Quitar">Q</span>
-                        <span className="logo_opciones_de_grilla" title="Finalizar">F</span>
+                    <div className='cont_btn_novead'>
+                        <span className='logo_opciones_de_grilla' title='Quitar'>Q</span>
+                        <span className='logo_opciones_de_grilla' title='Finalizar'>F</span>
                     </div>
                 </div>
 
                 {/* <!-- contenedor opciones quitar y asignar --> */}
-                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className="cont_btn_A_Q_Agregar filtro"> {/* FILTRO */}
-                    <span title="Asignar" className="btn_A_Q_Agregar">A</span>
-                    <span title="Quitar" className="btn_A_Q_Agregar">Q</span>
+                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className='cont_btn_A_Q_Agregar filtro'> {/* FILTRO */}
+                    <span title='Asignar' className='btn_A_Q_Agregar'>A</span>
+                    <span title='Quitar' className='btn_A_Q_Agregar'>Q</span>
                 </div>
 
                 {/* CONTENEDOR DE NOVEDADES DE A Q A F */}

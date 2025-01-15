@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -73,28 +73,10 @@ function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraI
   return { id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR };
 }
 
-const rows = tablaInternos.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR));
+export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, contenidoInput, contenidoSector }) {
 
-export default function StickyHeadTable({ novedadSeleccionada, typoNovedad, setIdTablaSelect, filtrarInternosDelBuscador, filtrarSectorDelBuscador }) {
 
-  const [filtrarPorNovedad, setFiltrarPorNovedad] = useState();
-
-  useEffect(() => {
-    switch (novedadSeleccionada) {
-
-      case 'pendientes':
-        setFiltrarPorNovedad('pendiente');
-        break;
-      case 'encurso':
-        setFiltrarPorNovedad('en curso');
-        break;
-      case 'finalizadas':
-        setFiltrarPorNovedad('finalizado');
-        break;
-      default:
-        setFiltrarPorNovedad('historial');
-    }
-  }, [novedadSeleccionada]);
+  const [rows, setRows] = useState(tablaInterno.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR)));
 
 
   const [page, setPage] = React.useState(0);
@@ -120,15 +102,22 @@ export default function StickyHeadTable({ novedadSeleccionada, typoNovedad, setI
 
   // filtrar por Novedad motivo y Detalle de trabajos
   useEffect(() => {
-    const filteredData = rows.filter(row => {
-      return (
-        row.novedadMotivo.toLowerCase().includes(filtrarInternosDelBuscador.toLowerCase()) ||
-        row.detalleTrabajosRealizados.toLowerCase().includes(filtrarInternosDelBuscador.toLowerCase())
-      );
-    });
+    // Función auxiliar para filtrar los datos según el criterio
+    const filterData = (rows) => {
+      if (!contenidoInput) {
+        return rows; // Retorna todos los datos si se selecciona "todas"
+      } else {
+        // Filtrado normal basado en el valor ingresado
+        return rows.filter(row => {
+          return row.novedadMotivo.toString().toLowerCase().includes(contenidoInput.toString().toLowerCase()) ||
+                 row.detalleTrabajosRealizados.toString().toLowerCase().includes(contenidoInput.toString().toLowerCase())
+        });
+      }
+    };
+    const filteredData = filterData(rows, contenidoSector);
     setFilteredRows(filteredData);
-    setPage(0); // Al filtrar, siempre vamos a la primera página
-  }, [rows, filtrarInternosDelBuscador]);
+    setPage(0);
+  }, [rows, contenidoInput]);
 
   // filtrar por sector usando criterios
   useEffect(() => {
@@ -147,10 +136,10 @@ export default function StickyHeadTable({ novedadSeleccionada, typoNovedad, setI
         });
       }
     };
-    const filteredData = filterData(rows, filtrarSectorDelBuscador);
+    const filteredData = filterData(rows, contenidoSector);
     setFilteredRows(filteredData);
     setPage(0);
-  }, [rows, filtrarSectorDelBuscador]);
+  }, [rows, contenidoSector]);
 
 
   return (
