@@ -1,24 +1,25 @@
 import './Grillas.css';
-import Btns from './Componentes/Btns';
-import Vacio from './Componentes/Vacio';
-import ContCentralArriba from './Componentes/ContCentralArriba';
-import MiniGrids from './Componentes/MiniGrids';
-import ResumenNovedades from './Componentes/ResumenNovedades'
-import CuadroAQAF from './Componentes/CuadroAQAF.js';
-import Tabls from './Componentes/Tabls.js';
+import Btns from '../Componentes/Btns.js';
+import Vacio from '../Componentes/Vacio.js';
+import ContCentralArriba from '../Componentes/ContCentralArriba.js';
+import MiniGrids from '../Componentes/MiniGrids.js';
+import ResumenNovedades from '../Componentes/ResumenNovedades.js'
+import CuadroAQAF from '../Componentes/CuadroAQAF.js';
+import Tabls from '../Componentes/Tabls.js';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //BASE DE DATOS
 import tablaInternos from '../tablas.json';
+import { useSearchParams } from 'react-router-dom';
 
 function Grid() {
     //separar tabla internos
-    const [tablaPendiente, setTablaPendiente] = useState([]);
-    const [tablaEnCurso, setTablaEnCurso] = useState([]);
-    const [tablaFinalizado, setTablaFinalizado] = useState([]);
+    const [tablaPendiente, setTablaPendiente] = useState(tablaInternos);
+    const [tablaEnCurso, setTablaEnCurso] = useState(tablaInternos);
+    const [tablaFinalizado, setTablaFinalizado] = useState(tablaInternos);
 
-    
+
 
     // variables para cambiar las novedades
     const [vacio_2, setVacio_2] = useState('');
@@ -36,6 +37,53 @@ function Grid() {
 
     //ABRIR CERRAR contCentralAbajoDerechaGrilla
     const [contCentralAbajoDerechaGrilla, setContCentralAbajoDerechaGrilla] = useState(false);
+
+    //CONTAR CARROCERIA MECANICA ELECTRICA GOMERIA OTRAS
+    const [resumenDeNovedades, setResumenDeNovedades] = useState({
+        'Pendiente': {
+            CARROCERIA: 0,
+            ELECTRICIDAD: 0,
+            GOMERIA: 0,
+            MECANICA: 0,
+            OTRAS: 0
+        },
+        'En Curso': {
+            CARROCERIA: 0,
+            ELECTRICIDAD: 0,
+            GOMERIA: 0,
+            MECANICA: 0,
+            OTRAS: 0
+        },
+        'Finalizado': {
+            CARROCERIA: 0,
+            ELECTRICIDAD: 0,
+            GOMERIA: 0,
+            MECANICA: 0,
+            OTRAS: 0
+        },
+        'Historial': {
+            CARROCERIA: 0,
+            ELECTRICIDAD: 0,
+            GOMERIA: 0,
+            MECANICA: 0,
+            OTRAS: 0
+        },
+    });
+
+    const sectoresValidos = ['MECANICA', 'ELECTRICIDAD', 'GOMERIA', 'CARROCERIA'];
+
+    
+
+
+    // const incrementarTareaPendienteCarroceria = () => {
+    //     setResumenDeNovedades((prevState) => ({
+    //       ...prevState,
+    //       Pendiente: {
+    //         ...prevState.Pendiente,
+    //         Carroceria: prevState.Pendiente.Carroceria + 1,
+    //       },
+    //     }));
+    //   };
 
     // variables filtrar internos y filas de tabla por novedad y trabajos
     const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos');
@@ -60,8 +108,6 @@ function Grid() {
 
     // Seleccionar Fila de TABLA
     const [idTablaSelect, setIdTablaSelect] = useState();
-
-
 
 
     // funcion para cambiar las novedades
@@ -226,6 +272,53 @@ function Grid() {
 
     }
 
+    //AGREGAR RESUMEN NOVEDADES
+    useEffect(() => {
+        const initialState = {
+            'Pendiente': {
+                CARROCERIA: 0,
+                ELECTRICIDAD: 0,
+                GOMERIA: 0,
+                MECANICA: 0,
+                OTRAS: 0
+            },
+            'En Curso': {
+                CARROCERIA: 0,
+                ELECTRICIDAD: 0,
+                GOMERIA: 0,
+                MECANICA: 0,
+                OTRAS: 0
+            },
+            'Finalizado': {
+                CARROCERIA: 0,
+                ELECTRICIDAD: 0,
+                GOMERIA: 0,
+                MECANICA: 0,
+                OTRAS: 0
+            },
+            'Historial': {
+                CARROCERIA: 0,
+                ELECTRICIDAD: 0,
+                GOMERIA: 0,
+                MECANICA: 0,
+                OTRAS: 0
+            },
+        };
+
+        const newConteos = tablaInternos.filter((tab) => tab.Interno === numeroInternoSelect).reduce((acc, tbs) => {
+            const estado = tbs.Estado.toString();
+            const sector = tbs.Sector.toUpperCase() || 'OTRAS';
+            const sectorFinal = sectoresValidos.includes(sector) ? sector : 'OTRAS';
+
+            acc[estado][sectorFinal] = (acc[estado][sectorFinal] || 0) + 1;
+            acc['Historial'][sectorFinal] = (acc['Historial'][sectorFinal] || 0) + 1;
+
+            return acc;
+        }, { ...initialState });
+
+        setResumenDeNovedades(newConteos);
+    }, [numeroInternoSelect, tablaInternos]);
+
 
     // NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR
 
@@ -244,6 +337,12 @@ function Grid() {
             setMovimientoX_AQAF(e.pageX);
             setMovimientoY_AQAF(e.pageY);
         }
+
+    }
+
+    //Cuadro AQAF
+    const [cuadroAQAF, setCuadroAQAF] = useState();
+    function AbrirCuadroAQAF() {
 
     }
 
@@ -416,21 +515,25 @@ function Grid() {
                             {/* <!-- resumen novedades pendientes --> */}
                             <ResumenNovedades
                                 title_Novedad='Pendientes'
+                                resumenDeNovedades={resumenDeNovedades.Pendiente}
                             />
 
                             {/* <!-- resumen novedades en curso --> */}
                             <ResumenNovedades
                                 title_Novedad='En Curso'
+                                resumenDeNovedades={resumenDeNovedades['En Curso']}
                             />
 
                             {/* <!-- resumen novedades finalizadas --> */}
                             <ResumenNovedades
                                 title_Novedad='Finalizadas'
+                                resumenDeNovedades={resumenDeNovedades.Finalizado}
                             />
 
                             {/* <!-- resumen historial de novedades --> */}
                             <ResumenNovedades
                                 title_Novedad='Historial'
+                                resumenDeNovedades={resumenDeNovedades.Historial}
                             />
 
                         </div>
@@ -448,6 +551,7 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'pendiente'}
                                     setIdTablaSelect={setIdTablaSelect}
+                                    numeroInternoSelect = {numeroInternoSelect}
                                     contenidoInput={filtrarInternosPendiente} //envia lo que contene el buscador
                                     contenidoSector={filtrarSectorPendiente} //envia el sector seleccionado
                                 />
@@ -467,6 +571,7 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'encurso'}
                                     setIdTablaSelect={setIdTablaSelect}
+                                    numeroInternoSelect = {numeroInternoSelect}
                                     contenidoInput={filtrarInternosEnCurso} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
                                 />
@@ -486,6 +591,7 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'finalizado'}
                                     setIdTablaSelect={setIdTablaSelect}
+                                    numeroInternoSelect = {numeroInternoSelect}
                                     contenidoInput={filtrarInternosFinalizadas} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
                                 />
@@ -505,6 +611,7 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'historial'}
                                     setIdTablaSelect={setIdTablaSelect}
+                                    numeroInternoSelect = {numeroInternoSelect}
                                     contenidoInput={filtrarInternosHistorial} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
                                 />
@@ -518,12 +625,12 @@ function Grid() {
                 <div style={{ top: `${movimientoY_AQAF}px`, left: `${movimientoX_AQAF}px` }} className={`${contAQAF ? 'opciones_de_grilla' : 'filtro'}`}>{/*filtro*/}
                     <p className='titulo_novedad_opciones'>Novedad</p>
                     <div className='cont_btn_novead'>
-                        <span className='material-symbols-outlined logo_opciones_de_grilla ' title='Agregar'>add</span>
-                        <span className='logo_opciones_de_grilla' title='Asignar'>A</span>
+                        <span onClick={AbrirCuadroAQAF(true)} className='material-symbols-outlined logo_opciones_de_grilla ' title='Agregar'>add</span>
+                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Asignar'>A</span>
                     </div>
                     <div className='cont_btn_novead'>
-                        <span className='logo_opciones_de_grilla' title='Quitar'>Q</span>
-                        <span className='logo_opciones_de_grilla' title='Finalizar'>F</span>
+                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Quitar'>Q</span>
+                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Finalizar'>F</span>
                     </div>
                 </div>
 

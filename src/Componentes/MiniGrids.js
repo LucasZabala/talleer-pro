@@ -4,8 +4,7 @@ export default function MiniGrid({ numero, funcion, numeroBuscado, MostrarContAQ
         <div
             tabIndex='0'
             className={numero.toString().includes(numeroBuscado.toString()) ? 'cont-mini-grids' : 'filtro'}
-            onClick={() => funcion(numero)}
-            onMouseDown={(e) => (MostrarContAQAF(), MoverContAQAF(e))}
+            onMouseDown={(e) => (MostrarContAQAF(), MoverContAQAF(e), funcion(numero))}
         >
             <p className='title-mini-grids'>
                 Interno

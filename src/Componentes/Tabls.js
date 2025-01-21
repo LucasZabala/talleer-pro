@@ -8,7 +8,6 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import tablaInternos from '../../tablas.json';
 import './Tabls.css';
 
 const columns = [
@@ -73,10 +72,16 @@ function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraI
   return { id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR };
 }
 
-export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, contenidoInput, contenidoSector }) {
+export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, numeroInternoSelect, contenidoInput, contenidoSector }) {
+  const [rows, setRows] = useState();
+  useEffect(() => {
+    if(typoNovedad.toLowerCase().includes('historial')){
+      setRows(tablaInterno.filter((tab) => tab.Interno == numeroInternoSelect).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR)));
+    }else{
+       setRows((tablaInterno.filter((tab) => (tab.Estado.toString().toLowerCase().replace(/\s+/g, '').includes(typoNovedad.toLowerCase())) && (numeroInternoSelect === tab.Interno)).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR))));
+    }
+   }, [numeroInternoSelect])
 
-
-  const [rows, setRows] = useState(tablaInterno.map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR)));
 
 
   const [page, setPage] = React.useState(0);
@@ -110,7 +115,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
         // Filtrado normal basado en el valor ingresado
         return rows.filter(row => {
           return row.novedadMotivo.toString().toLowerCase().includes(contenidoInput.toString().toLowerCase()) ||
-                 row.detalleTrabajosRealizados.toString().toLowerCase().includes(contenidoInput.toString().toLowerCase())
+            row.detalleTrabajosRealizados.toString().toLowerCase().includes(contenidoInput.toString().toLowerCase())
         });
       }
     };
@@ -219,42 +224,3 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
 
   );
 }
-/*
-aquí te explico el código
-
-1. Importando librerías:
-
-El código comienza importando las librerías necesarias:
-
-React: La librería principal para crear componentes de React.
-Componentes de Material-UI para la estructura de la tabla (Table, TableBody, etc.).
-react-virtuoso: Una librería para renderizar eficientemente conjuntos de datos grandes en tablas.
-Chance: Una librería para generar datos aleatorios.
-
-2. Generación de datos:
-
-Función createData: Esta función genera una única fila de datos para la tabla. Utiliza la librería Chance para crear valores aleatorios para campos como nombre, apellido, edad, número de teléfono y estado.
-Arreglo columns: Este arreglo define la estructura de la tabla. Especifica el ancho, la etiqueta y la clave de datos para cada columna.
-Arreglo rows: Este arreglo almacena los datos reales que se mostrarán en la tabla. Utiliza Array.from para crear un arreglo de 1000 filas, cada una rellenada con datos generados por la función createData.
-
-3. Componentes de tabla virtualizada:
-
-Objeto VirtuosoTableComponents: Este objeto define componentes personalizados para la tabla virtualizada utilizando componentes de Material-UI. Reemplaza componentes como TableContainer, Table, TableHead, etc., para darles estilo según sea necesario para la tabla virtualizada.
-
-4. Contenido del encabezado fijo:
-
-Función fixedHeaderContent: Esta función define el contenido del encabezado de la tabla. Itera a través del arreglo columns y crea una fila de tabla con celdas de encabezado para cada columna. Las celdas del encabezado muestran la etiqueta de la columna y tienen un estilo con un color de fondo.
-
-5. Contenido de las filas:
-
-Función rowContent: Esta función define el contenido de cada fila de la tabla. Toma el índice de la fila y los datos como argumentos y itera a través del arreglo columns. Para cada columna, crea una celda de tabla y muestra el valor correspondiente de los datos de la fila.
-
-6. Componente principal:
-
-Función Tabls: Este es el componente principal que renderiza la tabla virtualizada. Utiliza un componente Paper de Material-UI como contenedor y establece su altura y ancho.
-Dentro del componente Paper, utiliza el componente TableVirtuoso de react-virtuoso. Este componente toma varias propiedades:
-data: El arreglo de datos que se mostrarán en la tabla (en este caso, rows).
-components: Los componentes personalizados definidos en VirtuosoTableComponents para el estilo.
-fixedHeaderContent: La función que define el contenido de la fila del encabezado fijo.
-itemContent: La función que define el contenido de cada fila de la tabla.
-*/

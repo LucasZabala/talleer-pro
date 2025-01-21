@@ -1,9 +1,14 @@
 
 import './App.css';
 import Grid from './Grillas/Grillas.js';
-import Btns from './Grillas/Componentes/Btns.js';
+import Btns from './Componentes/Btns.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import DbFirebase from './Grillas/DbFirebase.js';
+import 'stream-browserify';
+import 'stream-http';
+// ... y así para todos los demás módulos
 
-function App() {      
+function App() {
 
   return (
     <div className='App'>
@@ -61,7 +66,12 @@ function App() {
 
       <main>
 
-        <Grid/>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Grid />} />
+          </Routes>
+        </Router>
+
 
       </main>
 
