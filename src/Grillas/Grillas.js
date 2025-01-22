@@ -72,7 +72,7 @@ function Grid() {
 
     const sectoresValidos = ['MECANICA', 'ELECTRICIDAD', 'GOMERIA', 'CARROCERIA'];
 
-    
+
 
 
     // const incrementarTareaPendienteCarroceria = () => {
@@ -106,8 +106,21 @@ function Grid() {
     const [movimientoX_AQAF, setMovimientoX_AQAF] = useState(0);
     const [movimientoY_AQAF, setMovimientoY_AQAF] = useState(0);
 
+    //NOVEDAD QUIETAR FINALIZAR
+    const [contQF, setContQF] = useState(false);
+
     // Seleccionar Fila de TABLA
     const [idTablaSelect, setIdTablaSelect] = useState();
+
+    //CUADROS DE NOVEDADES
+    //AGREGAR ASIGNAR FINALIZAR QUITAR
+    const [cuadroAgregarNovedad, setCuadroAgregarNovedad] = useState(false);
+    const [cuadroAsignarNovedad, setCuadroAsignarNovedad] = useState(false);
+    const [cuadroFinalizarNovedad, setCuadroFinalizarNovedad] = useState(false);
+    const [cuadroQuitarNovedad, setCuadroQuitarNovedad] = useState(false);
+
+    ////////////////////////////////////////////////////////////////////////////////
+
 
 
     // funcion para cambiar las novedades
@@ -237,7 +250,7 @@ function Grid() {
     }
     // funcion filtrar filas de tabla y conservarlos en BOTONES de SECTOR
     function FiltrarFilasTablaSector(typoSector) {
-
+        EsconderrContAQAF();
         setFiltrarFilaTablaSector(typoSector.toString().toLowerCase()); //valor del btoon de sector .replace(/\s+/g, '')
         switch (novedadSeleccionada) {
             case 'pendiente':
@@ -324,10 +337,15 @@ function Grid() {
 
     function EsconderrContAQAF() {
         setContAQAF(false);
+        setContQF(false);
     }
 
     function MostrarContAQAF() {
         setContAQAF(true);
+    }
+
+    function MostrarContQF() {
+        setContQF(true);
     }
 
     //movimientos del cuadrito de Agregar, Asignar, Quitar y Finalizar
@@ -339,13 +357,6 @@ function Grid() {
         }
 
     }
-
-    //Cuadro AQAF
-    const [cuadroAQAF, setCuadroAQAF] = useState();
-    function AbrirCuadroAQAF() {
-
-    }
-
 
     return (
         <>
@@ -551,9 +562,12 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'pendiente'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    numeroInternoSelect = {numeroInternoSelect}
+                                    numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosPendiente} //envia lo que contene el buscador
                                     contenidoSector={filtrarSectorPendiente} //envia el sector seleccionado
+                                    MostrarContQF={MostrarContQF}
+                                    MoverContAQAF={MoverContAQAF}
+                                    EsconderrContAQAF={EsconderrContAQAF}
                                 />
                             </div>
 
@@ -571,9 +585,12 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'encurso'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    numeroInternoSelect = {numeroInternoSelect}
+                                    numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosEnCurso} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
+                                    MostrarContQF={MostrarContQF}
+                                    MoverContAQAF={MoverContAQAF}
+                                    EsconderrContAQAF={EsconderrContAQAF}
                                 />
                             </div>
 
@@ -591,9 +608,12 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'finalizado'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    numeroInternoSelect = {numeroInternoSelect}
+                                    numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosFinalizadas} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
+                                    MostrarContQF={MostrarContQF}
+                                    MoverContAQAF={MoverContAQAF}
+                                    EsconderrContAQAF={EsconderrContAQAF}
                                 />
                             </div>
 
@@ -611,9 +631,12 @@ function Grid() {
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'historial'}
                                     setIdTablaSelect={setIdTablaSelect}
-                                    numeroInternoSelect = {numeroInternoSelect}
+                                    numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosHistorial} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
+                                    MostrarContQF={MostrarContQF}
+                                    MoverContAQAF={MoverContAQAF}
+                                    EsconderrContAQAF={EsconderrContAQAF}
                                 />
                             </div>
 
@@ -625,23 +648,33 @@ function Grid() {
                 <div style={{ top: `${movimientoY_AQAF}px`, left: `${movimientoX_AQAF}px` }} className={`${contAQAF ? 'opciones_de_grilla' : 'filtro'}`}>{/*filtro*/}
                     <p className='titulo_novedad_opciones'>Novedad</p>
                     <div className='cont_btn_novead'>
-                        <span onClick={AbrirCuadroAQAF(true)} className='material-symbols-outlined logo_opciones_de_grilla ' title='Agregar'>add</span>
-                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Asignar'>A</span>
+                        <span onClick={() => setCuadroAgregarNovedad(true)} className='material-symbols-outlined logo_opciones_de_grilla ' title='Agregar'>add</span>
+                        <span onClick={() => setCuadroAsignarNovedad(true)} className='logo_opciones_de_grilla' title='Asignar'>A</span>
                     </div>
                     <div className='cont_btn_novead'>
-                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Quitar'>Q</span>
-                        <span onClick={AbrirCuadroAQAF(true)} className='logo_opciones_de_grilla' title='Finalizar'>F</span>
+                        <span onClick={() => setCuadroQuitarNovedad(true)} className='logo_opciones_de_grilla' title='Quitar'>Q</span>
+                        <span onClick={() => setCuadroFinalizarNovedad(true)} className='logo_opciones_de_grilla' title='Finalizar'>F</span>
                     </div>
                 </div>
 
                 {/* <!-- contenedor opciones quitar y asignar --> */}
-                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className='cont_btn_A_Q_Agregar filtro'> {/* FILTRO */}
+                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className={`${contQF ? 'cont_btn_A_Q_Agregar' : 'filtro'}`}> {/* FILTRO */}
                     <span title='Asignar' className='btn_A_Q_Agregar'>A</span>
                     <span title='Quitar' className='btn_A_Q_Agregar'>Q</span>
                 </div>
 
                 {/* CONTENEDOR DE NOVEDADES DE A Q A F */}
-                <CuadroAQAF />
+                <CuadroAQAF
+                    numeroInternoSelect={numeroInternoSelect}
+                    cuadroAgregarNovedad={cuadroAgregarNovedad}
+                    cuadroAsignarNovedad={cuadroAsignarNovedad}
+                    cuadroFinalizarNovedad={cuadroFinalizarNovedad}
+                    cuadroQuitarNovedad={cuadroQuitarNovedad}
+                    setCuadroAgregarNovedad={setCuadroAgregarNovedad}
+                    setCuadroAsignarNovedad={setCuadroAsignarNovedad}
+                    setCuadroFinalizarNovedad={setCuadroFinalizarNovedad}
+                    setCuadroQuitarNovedad={setCuadroQuitarNovedad}
+                />
 
             </div>
         </>

@@ -93,7 +93,16 @@
     font-size: 1vw  ;
     height: 1.8vw;
     padding-left: .4vw ;
+    width: 21.8vw !important;
     
+}
+
+.opciones_Sector_2{
+    margin-left: 8.2vw;
+    font-size: 1vw  ;
+    height: 1.8vw;
+    padding-left: .4vw ;
+    width: 32vw !important;
 }
 
 .contenedor_Novedad{
@@ -245,6 +254,10 @@
     width: 100%;
     border-collapse: collapse;
 
+}
+
+.selected-row{
+    background-color: #808080 !important;
 }
 
 .cont_btn_A_Q_Agregar{

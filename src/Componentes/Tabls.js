@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -72,15 +72,15 @@ function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraI
   return { id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR };
 }
 
-export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, numeroInternoSelect, contenidoInput, contenidoSector }) {
+export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, numeroInternoSelect, contenidoInput, contenidoSector, MostrarContQF, MoverContAQAF, EsconderrContAQAF }) {
   const [rows, setRows] = useState();
   useEffect(() => {
-    if(typoNovedad.toLowerCase().includes('historial')){
+    if (typoNovedad.toLowerCase().includes('historial')) {
       setRows(tablaInterno.filter((tab) => tab.Interno == numeroInternoSelect).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR)));
-    }else{
-       setRows((tablaInterno.filter((tab) => (tab.Estado.toString().toLowerCase().replace(/\s+/g, '').includes(typoNovedad.toLowerCase())) && (numeroInternoSelect === tab.Interno)).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR))));
+    } else {
+      setRows((tablaInterno.filter((tab) => (tab.Estado.toString().toLowerCase().replace(/\s+/g, '').includes(typoNovedad.toLowerCase())) && (numeroInternoSelect === tab.Interno)).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR))));
     }
-   }, [numeroInternoSelect])
+  }, [numeroInternoSelect])
 
 
 
@@ -95,6 +95,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    EsconderrContAQAF();
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -119,7 +120,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
         });
       }
     };
-    const filteredData = filterData(rows, contenidoSector);
+    const filteredData = filterData(rows);
     setFilteredRows(filteredData);
     setPage(0);
   }, [rows, contenidoInput]);
@@ -177,7 +178,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
                           const value = row[column.id];
                           return (
                             <TableCell
-                              onClick={() => handleRowClick(row.id)}
+                              onClick={(e) => (handleRowClick(row.id), MostrarContQF(), MoverContAQAF(e))}
                               key={column.id}
                               align={column.align}
                               className={selectedRowId === row.id ? 'selected-row' : ''}
