@@ -106,11 +106,14 @@ function Grid() {
     const [movimientoX_AQAF, setMovimientoX_AQAF] = useState(0);
     const [movimientoY_AQAF, setMovimientoY_AQAF] = useState(0);
 
+    //NOVEDAD QUIETAR Asignar
+    const [contQA, setContQA] = useState(false);
+
     //NOVEDAD QUIETAR FINALIZAR
     const [contQF, setContQF] = useState(false);
 
     // Seleccionar Fila de TABLA
-    const [idTablaSelect, setIdTablaSelect] = useState();
+    const [rowTablaSelect, setRowTablaSelect] = useState(null);
 
     //CUADROS DE NOVEDADES
     //AGREGAR ASIGNAR FINALIZAR QUITAR
@@ -118,6 +121,9 @@ function Grid() {
     const [cuadroAsignarNovedad, setCuadroAsignarNovedad] = useState(false);
     const [cuadroFinalizarNovedad, setCuadroFinalizarNovedad] = useState(false);
     const [cuadroQuitarNovedad, setCuadroQuitarNovedad] = useState(false);
+
+    //SELECCIONAR FILA DE TABLA AGREGAR para PENDIENTE
+    const [rowTablaSelectAgregar, setRowTablaSelectAgregar] = useState(null);
 
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -337,11 +343,16 @@ function Grid() {
 
     function EsconderrContAQAF() {
         setContAQAF(false);
+        setContQA(false);
         setContQF(false);
     }
 
     function MostrarContAQAF() {
         setContAQAF(true);
+    }
+
+    function MostrarContQA() {
+        setContQA(true);
     }
 
     function MostrarContQF() {
@@ -480,7 +491,7 @@ function Grid() {
                     <div className={`${novedadSeleccionada == 'internos' ? (btnIzquierdo ? 'cont-central-abajo-grilla' : 'cont-central-abajo-grilla-2') : 'filtro'}`}>
 
                         {/* cont-central-abajo-izquierda-grilla */}
-                        <div className='cont-central-abajo-izquierda-grilla'>
+                        <div onWheel={EsconderrContAQAF} className='cont-central-abajo-izquierda-grilla'>
                             <div className={`${btnIzquierdo ? 'cont-internos-grilla-2' : 'cont-internos-grilla'}`}>
                                 <MiniGrids
                                     numero={1}
@@ -488,6 +499,7 @@ function Grid() {
                                     numeroBuscado={filtrarInternosProblemas}
                                     MostrarContAQAF={MostrarContAQAF}
                                     MoverContAQAF={MoverContAQAF}
+                                    numeroInternoSelect={numeroInternoSelect}
                                 />
                                 <MiniGrids
                                     numero={2}
@@ -495,6 +507,7 @@ function Grid() {
                                     numeroBuscado={filtrarInternosProblemas}
                                     MostrarContAQAF={MostrarContAQAF}
                                     MoverContAQAF={MoverContAQAF}
+                                    numeroInternoSelect={numeroInternoSelect}
                                 />
                                 <MiniGrids
                                     numero={3}
@@ -502,6 +515,7 @@ function Grid() {
                                     numeroBuscado={filtrarInternosProblemas}
                                     MostrarContAQAF={MostrarContAQAF}
                                     MoverContAQAF={MoverContAQAF}
+                                    numeroInternoSelect={numeroInternoSelect}
                                 />
                                 <MiniGrids
                                     numero={4}
@@ -509,6 +523,7 @@ function Grid() {
                                     numeroBuscado={filtrarInternosProblemas}
                                     MostrarContAQAF={MostrarContAQAF}
                                     MoverContAQAF={MoverContAQAF}
+                                    numeroInternoSelect={numeroInternoSelect}
                                 />
                             </div>
 
@@ -561,10 +576,11 @@ function Grid() {
                                     tablaInterno={tablaPendiente}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'pendiente'}
-                                    setIdTablaSelect={setIdTablaSelect}
+                                    setRowTablaSelect={setRowTablaSelect}
                                     numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosPendiente} //envia lo que contene el buscador
                                     contenidoSector={filtrarSectorPendiente} //envia el sector seleccionado
+                                    MostrarContQA={MostrarContQA}
                                     MostrarContQF={MostrarContQF}
                                     MoverContAQAF={MoverContAQAF}
                                     EsconderrContAQAF={EsconderrContAQAF}
@@ -584,10 +600,11 @@ function Grid() {
                                     tablaInterno={tablaEnCurso}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'encurso'}
-                                    setIdTablaSelect={setIdTablaSelect}
+                                    setRowTablaSelect={setRowTablaSelect}
                                     numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosEnCurso} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorEnCurso} //envia el sector seleccionado
+                                    MostrarContQA={MostrarContQA}
                                     MostrarContQF={MostrarContQF}
                                     MoverContAQAF={MoverContAQAF}
                                     EsconderrContAQAF={EsconderrContAQAF}
@@ -607,10 +624,11 @@ function Grid() {
                                     tablaInterno={tablaFinalizado}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'finalizado'}
-                                    setIdTablaSelect={setIdTablaSelect}
+                                    setRowTablaSelect={setRowTablaSelect}
                                     numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosFinalizadas} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorFinalizadas} //envia el sector seleccionado
+                                    MostrarContQA={MostrarContQA}
                                     MostrarContQF={MostrarContQF}
                                     MoverContAQAF={MoverContAQAF}
                                     EsconderrContAQAF={EsconderrContAQAF}
@@ -630,10 +648,11 @@ function Grid() {
                                     tablaInterno={tablaInternos}
                                     novedadSeleccionada={novedadSeleccionada}
                                     typoNovedad={'historial'}
-                                    setIdTablaSelect={setIdTablaSelect}
+                                    setRowTablaSelect={setRowTablaSelect}
                                     numeroInternoSelect={numeroInternoSelect}
                                     contenidoInput={filtrarInternosHistorial} //envia lo que contene el buscador
                                     contenidoSector={filtrarFilaTablaSectorHistorial} //envia el sector seleccionado
+                                    MostrarContQA={MostrarContQA}
                                     MostrarContQF={MostrarContQF}
                                     MoverContAQAF={MoverContAQAF}
                                     EsconderrContAQAF={EsconderrContAQAF}
@@ -658,21 +677,34 @@ function Grid() {
                 </div>
 
                 {/* <!-- contenedor opciones quitar y asignar --> */}
+                <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className={`${contQA ? 'cont_btn_A_Q_Agregar' : 'filtro'}`}> {/* FILTRO */}
+                    <span onClick={() => setCuadroAsignarNovedad(true)} title='Asignar' className='btn_A_Q_Agregar'>A</span>
+                    <span onClick={() => setCuadroQuitarNovedad(true)} title='Quitar' className='btn_A_Q_Agregar'>Q</span>
+                </div>
+
+                {/* <!-- contenedor opciones quitar y Finalizar --> */}
                 <div style={{ top: `${movimientoY_AQAF - 50}px`, left: `${movimientoX_AQAF}px` }} className={`${contQF ? 'cont_btn_A_Q_Agregar' : 'filtro'}`}> {/* FILTRO */}
-                    <span title='Asignar' className='btn_A_Q_Agregar'>A</span>
-                    <span title='Quitar' className='btn_A_Q_Agregar'>Q</span>
+                    <span onClick={() => setCuadroFinalizarNovedad(true)} title='Finalizar' className='btn_A_Q_Agregar'>F</span>
+                    <span onClick={() => setCuadroQuitarNovedad(true)} title='Quitar' className='btn_A_Q_Agregar'>Q</span>
                 </div>
 
                 {/* CONTENEDOR DE NOVEDADES DE A Q A F */}
                 <CuadroAQAF
                     numeroInternoSelect={numeroInternoSelect}
+                    //TABLA SELECCIONADA 
+                    rowTablaSelect={rowTablaSelect}
+                    //Agregar
                     cuadroAgregarNovedad={cuadroAgregarNovedad}
-                    cuadroAsignarNovedad={cuadroAsignarNovedad}
-                    cuadroFinalizarNovedad={cuadroFinalizarNovedad}
-                    cuadroQuitarNovedad={cuadroQuitarNovedad}
                     setCuadroAgregarNovedad={setCuadroAgregarNovedad}
+                    setRowTablaSelectAgregar={setRowTablaSelectAgregar}
+                    //Asignar
+                    cuadroAsignarNovedad={cuadroAsignarNovedad}
                     setCuadroAsignarNovedad={setCuadroAsignarNovedad}
+                    //Finalizar
+                    cuadroFinalizarNovedad={cuadroFinalizarNovedad}
                     setCuadroFinalizarNovedad={setCuadroFinalizarNovedad}
+                    //Quitar
+                    cuadroQuitarNovedad={cuadroQuitarNovedad}
                     setCuadroQuitarNovedad={setCuadroQuitarNovedad}
                 />
 

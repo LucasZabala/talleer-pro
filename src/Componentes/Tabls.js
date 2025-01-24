@@ -12,12 +12,6 @@ import './Tabls.css';
 
 const columns = [
   {
-    id: 'id',
-    label: 'ID',
-    padding: '1vw',
-    align: 'center',
-  },
-  {
     id: 'fechaNovedad',
     label: 'Fecha Novedad',
     align: 'center',
@@ -68,17 +62,17 @@ const columns = [
   },
 ];
 
-function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR) {
-  return { id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR };
+function createData(id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR, tiempoTarea) {
+  return { id, fechaNovedad, interno, sector, novedadMotivo, fechaHoraInicio, legajo1, detalleTrabajosRealizados, fechaHoraFin, estado, pendientePOR, tiempoTarea };
 }
 
-export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setIdTablaSelect, numeroInternoSelect, contenidoInput, contenidoSector, MostrarContQF, MoverContAQAF, EsconderrContAQAF }) {
+export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typoNovedad, setRowTablaSelect, numeroInternoSelect, contenidoInput, contenidoSector, MostrarContQA, MostrarContQF, MoverContAQAF, EsconderrContAQAF }) {
   const [rows, setRows] = useState();
   useEffect(() => {
     if (typoNovedad.toLowerCase().includes('historial')) {
-      setRows(tablaInterno.filter((tab) => tab.Interno == numeroInternoSelect).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR)));
+      setRows(tablaInterno.filter((tab) => tab.Interno == numeroInternoSelect).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR, tbs.Tiempo_Tarea)));
     } else {
-      setRows((tablaInterno.filter((tab) => (tab.Estado.toString().toLowerCase().replace(/\s+/g, '').includes(typoNovedad.toLowerCase())) && (numeroInternoSelect === tab.Interno)).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR))));
+      setRows((tablaInterno.filter((tab) => (tab.Estado.toString().toLowerCase().replace(/\s+/g, '').includes(typoNovedad.toLowerCase())) && (numeroInternoSelect === tab.Interno)).map(tbs => createData(tbs.Id, tbs.Fecha_Novedad, tbs.Interno, tbs.Sector, tbs.Novedad_Motivo, tbs.Fecha_Hora_Inicio, tbs.Legajo_1, tbs.Detalle_Trabajos_Realizados, tbs.Fecha_Hora_Fin, tbs.Estado, tbs.Pendiente_POR, tbs.Tiempo_Tarea))));
     }
   }, [numeroInternoSelect])
 
@@ -88,8 +82,8 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [selectedRowId, setSelectedRowId] = useState(null);
-  const handleRowClick = (id) => {
-    setIdTablaSelect(id); //obtiene id de fila seleccionada
+  const handleRowClick = (id, row) => {
+    setRowTablaSelect(row); //obtiene id de fila seleccionada
     setSelectedRowId(id);
   }
 
@@ -151,7 +145,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
   return (
     <>
       {novedadSeleccionada === typoNovedad && (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ width: '100%', overflow: 'hidden' }} onWheel={EsconderrContAQAF}>
           <TableContainer sx={{ maxHeight: '74vh', height: 'fit-content' }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
@@ -178,7 +172,7 @@ export default function StickyHeadTable({ tablaInterno, novedadSeleccionada, typ
                           const value = row[column.id];
                           return (
                             <TableCell
-                              onClick={(e) => (handleRowClick(row.id), MostrarContQF(), MoverContAQAF(e))}
+                              onClick={(e) => (handleRowClick(row.id, row), (typoNovedad === 'pendiente' ? MostrarContQA() : (typoNovedad === 'encurso' ? MostrarContQF() : '')), MoverContAQAF(e))}
                               key={column.id}
                               align={column.align}
                               className={selectedRowId === row.id ? 'selected-row' : ''}
