@@ -10,10 +10,15 @@ import Tabls from '../Componentes/Tabls.js';
 import React, { useState, useEffect } from 'react';
 
 //BASE DE DATOS
-import tablaInternos from '../tablas.json';
-import { useSearchParams } from 'react-router-dom';
 
-function Grid() {
+import tablaInternos from '../tablas.json';
+
+//FUNCION PRINCIPAL
+function Grid() {  
+
+    //GRILLA INTERNOS
+    const [internos, setInternos] = useState(null);
+
     //separar tabla internos
     const [tablaPendiente, setTablaPendiente] = useState(tablaInternos);
     const [tablaEnCurso, setTablaEnCurso] = useState(tablaInternos);
@@ -73,18 +78,6 @@ function Grid() {
     const sectoresValidos = ['MECANICA', 'ELECTRICIDAD', 'GOMERIA', 'CARROCERIA'];
 
 
-
-
-    // const incrementarTareaPendienteCarroceria = () => {
-    //     setResumenDeNovedades((prevState) => ({
-    //       ...prevState,
-    //       Pendiente: {
-    //         ...prevState.Pendiente,
-    //         Carroceria: prevState.Pendiente.Carroceria + 1,
-    //       },
-    //     }));
-    //   };
-
     // variables filtrar internos y filas de tabla por novedad y trabajos
     const [novedadSeleccionada, setNovedadSeleccionada] = useState('internos');
     const [filtrarInternosProblemas, setFiltrarInternosProblemas] = useState('');
@@ -126,8 +119,18 @@ function Grid() {
     const [rowTablaSelectAgregar, setRowTablaSelectAgregar] = useState(null);
 
     ////////////////////////////////////////////////////////////////////////////////
-
-
+    //Separar Internos
+    useEffect(() => {
+        const internosUnicos = new Set();
+        const nuevosInternos = tablaInternos.filter(interno => {
+            if (!internosUnicos.has(interno.Interno)) {
+                internosUnicos.add(interno.Interno);
+                return true;
+            }
+            return false;
+        });
+        setInternos(nuevosInternos);
+    }, []);
 
     // funcion para cambiar las novedades
     function SeleccinarBtnNovedad(novedad) {
@@ -493,38 +496,21 @@ function Grid() {
                         {/* cont-central-abajo-izquierda-grilla */}
                         <div onWheel={EsconderrContAQAF} className='cont-central-abajo-izquierda-grilla'>
                             <div className={`${btnIzquierdo ? 'cont-internos-grilla-2' : 'cont-internos-grilla'}`}>
-                                <MiniGrids
-                                    numero={1}
-                                    funcion={MostrarNumero}
-                                    numeroBuscado={filtrarInternosProblemas}
-                                    MostrarContAQAF={MostrarContAQAF}
-                                    MoverContAQAF={MoverContAQAF}
-                                    numeroInternoSelect={numeroInternoSelect}
-                                />
-                                <MiniGrids
-                                    numero={2}
-                                    funcion={MostrarNumero}
-                                    numeroBuscado={filtrarInternosProblemas}
-                                    MostrarContAQAF={MostrarContAQAF}
-                                    MoverContAQAF={MoverContAQAF}
-                                    numeroInternoSelect={numeroInternoSelect}
-                                />
-                                <MiniGrids
-                                    numero={3}
-                                    funcion={MostrarNumero}
-                                    numeroBuscado={filtrarInternosProblemas}
-                                    MostrarContAQAF={MostrarContAQAF}
-                                    MoverContAQAF={MoverContAQAF}
-                                    numeroInternoSelect={numeroInternoSelect}
-                                />
-                                <MiniGrids
-                                    numero={4}
-                                    funcion={MostrarNumero}
-                                    numeroBuscado={filtrarInternosProblemas}
-                                    MostrarContAQAF={MostrarContAQAF}
-                                    MoverContAQAF={MoverContAQAF}
-                                    numeroInternoSelect={numeroInternoSelect}
-                                />
+                                {
+                                    internos?.map(num => {
+                                        return (
+                                            <MiniGrids
+                                                numero={num.Interno}
+                                                funcion={MostrarNumero}
+                                                numeroBuscado={filtrarInternosProblemas}
+                                                MostrarContAQAF={MostrarContAQAF}
+                                                MoverContAQAF={MoverContAQAF}
+                                                numeroInternoSelect={numeroInternoSelect}
+                                            />
+                                        );
+                                    })
+                                }
+
                             </div>
 
                         </div>
