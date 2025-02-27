@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export default function ContCentralArriba({ novedad, numeroInternoSelect, filtrarInternos, filtrarInternosProblemas, filtrarFilasTablaSector, sectorSelect }) {
+export default function ContCentralArriba({ novedad, numeroInternoSelect, filtrarInternos, filtrarInternosProblemas, filtrarFilasTablaSector, sectorSelect, setCuadroAgregarNovedad, setCuadroAsignarNovedad, setCuadroFinalizarNovedad, setCuadroQuitarNovedad }) {
 
     const input_interno_problemas = useRef(null);
 
@@ -25,6 +25,25 @@ export default function ContCentralArriba({ novedad, numeroInternoSelect, filtra
                 />
             </div>
 
+            {/* BOTONES NOVEDAD ASIGNAR QUITAR AGREGAR FINALIZAR */}
+            <div className={`${novedad === 'internos' ? 'opciones_btn_A_Q_Agregar' : 'filtro'}`}>{/*filtro*/}
+                <span onClick={() => setCuadroAgregarNovedad(true)} className='material-symbols-outlined logo_A_Q_Agregar ' title='Agregar'>add</span>
+                <span onClick={() => setCuadroAsignarNovedad(true)} className='logo_A_Q_Agregar' title='Asignar'>A</span>
+            </div>
+
+            {/* <!-- botones opciones quitar y asignar --> */}
+            <div className={`${novedad==='pendiente' ? 'opciones_btn_A_Q_Agregar' : 'filtro'}`}> {/* FILTRO */}
+                <span onClick={() => setCuadroAsignarNovedad(true)} title='Asignar' className='logo_A_Q_Agregar'>A</span>
+                <span onClick={() => setCuadroQuitarNovedad(true)} title='Quitar' className='logo_A_Q_Agregar'>Q</span>
+            </div>
+
+            {/* <!-- botones opciones quitar y Finalizar --> */}
+            <div className={`${novedad==='encurso' ? 'opciones_btn_A_Q_Agregar' : 'filtro'}`}> {/* FILTRO */}
+                <span title='Volver a Pendiente' className='logo_A_Q_Agregar'>P</span> {/* volver a pendiente */}
+                <span onClick={() => setCuadroFinalizarNovedad(true)} title='Finalizar' className='logo_A_Q_Agregar'>F</span>
+                <span onClick={() => setCuadroQuitarNovedad(true)} title='Quitar' className='logo_A_Q_Agregar'>Q</span>
+            </div>
+
             {/* <!-- contnedor problemas --> */}
             <div className={`btns-filtrar-problemas ${novedad === 'internos' ? 'filtro' : ''}`}>
 
@@ -40,7 +59,6 @@ export default function ContCentralArriba({ novedad, numeroInternoSelect, filtra
                 <button onClick={() => filtrarFilasTablaSector('Gomeria')} className={sectorSelect == 'gomeria' ? 'problema_SELECCIONADO' : 'problemas'}>Gomeria</button>
                 {/* <!-- otras --> */}
                 <button onClick={() => filtrarFilasTablaSector('Otras')} className={sectorSelect == 'otras' ? 'problema_SELECCIONADO' : 'problemas'}>Otras</button>
-
 
             </div>
 

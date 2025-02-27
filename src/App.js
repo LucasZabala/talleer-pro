@@ -1,35 +1,31 @@
 
-import React, { useState } from 'react';
+
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Header from './Componentes/Header.js';
-import Form from './ConectedFirebase/Form.js';
+import Home from './Home/Home.js';
 import Grid from './Grillas/Grillas.js';
-
 
 import './App.css';
 
 function App() {
-  const [header, setHeader] = useState(false);
+
 
   return (
     <div className='App'>
-      <Header
-        header={header}
-      />
-      <main>
 
-        <Router>
-          <Routes>
-            <Route path="/Register" element={<Form />} />
-            <Route path="/Grid" element={<Grid />} />
-          </Routes>
-        </Router>
+      <Router>
+        <Routes>
 
+          <Route path="/" element={<Home />} />
 
-      </main>
+          <Route path="/Grid" element={<Grid />} />
 
+          {/* <Route path="*" element={<Grid />} /> */}
+        </Routes>
+      </Router>
     </div>
+
   );
 }
 

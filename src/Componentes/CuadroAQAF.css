@@ -82,7 +82,15 @@
 }
 
 .titulo_Espacio {
-    margin-left: 8.2vw;
+    margin-left: 8vw;
+    font-size: 1.5vw;
+    padding: .3vw;
+    padding-left: 0vw;
+    display: inline-block;
+}
+
+.titulo_Espacio_Demora{
+    margin-left: 2vw;
     font-size: 1.5vw;
     padding: .3vw;
     padding-left: 0vw;
@@ -103,7 +111,7 @@
     font-size: 1vw;
     height: 1.8vw;
     padding-left: .4vw;
-    width: 32vw !important;
+    width: 28vw !important;
 }
 
 .contenedor_Novedad {
@@ -153,8 +161,8 @@
 }
 
 .demora_Novedad {
-    margin-left: 8.2vw;
-    width: 7vw;
+    margin-left: 2vw;
+    width: 22vw;
     text-align: center;
     height: 2vw;
     text-align: center;
@@ -236,7 +244,7 @@
 .contTABLA_AGREGAR {
     width: 90%;
     overflow: auto;
-    height: 14vw;
+    max-height: 14vw;
     margin: .6vw auto;
     border-radius: 1vw 1vw 0 0;
     border: #000 .1vw solid;

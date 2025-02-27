@@ -7,6 +7,12 @@
     outline: none;
 }
 
+.App{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .filtro{
     display: none !important;
 }
@@ -15,93 +21,4 @@
     cursor: pointer;
 }
 
-/* HEADER */
-header {
-    position: fixed;
-    height: 8vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    z-index: 10;
-    background-color: #1d2125;
-    box-shadow: 0vw .1vw .2vw .2vw #3f3f3f;
-    /* border: .1vw solid #000000; */
-}
 
-/* MARCA */
-
-
-.logo {
-    margin-left: 1vw;
-    max-width: 10vw;
-    max-height: 7vh;
-    min-width: 10vw;
-    min-height: 7vh;
-}
-
-
-
-/* CONT LOGOS */
-.cont_logos {
-    width: 20vw;
-    position: absolute;
-    right: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    /* border: #fff .1vw solid; */
-
-}
-
-
-
-/* LOGOA */
-.logos_header {
-    font-size: 1.5vw !important;
-    cursor: pointer;
-    border-radius: 50%;
-    color: #fff;
-
-}
-
-
-/* GRILLAS */
-.opciones_de_grilla {
-    position: fixed;
-    width: 5.5vw;
-    height: 5.5vw;
-    border: .1vw solid #555555;
-    display: flex;
-    align-items: end;
-    justify-content: space-evenly;
-    background-color: #000000;
-    color: #cdcdcd;
-    border-radius: 1vw;
-}
-
-.titulo_novedad_opciones {
-    position: absolute;
-    top: 0vw;
-    font-size: 1vw;
-    margin: .2vw;
-}
-
-.logo_opciones_de_grilla {
-    font-size: 1.2vw !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 1.3vw;
-    height: 1.3vw;
-    border: .1vw solid #666666;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: .2s;
-    background-color: #6c2f00;
-    margin-bottom: .3vw;
-}
-
-.logo_opciones_de_grilla:hover {
-    background-color: #d3d3d3;
-    color: #fff;
-}
